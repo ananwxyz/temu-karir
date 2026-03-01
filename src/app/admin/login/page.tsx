@@ -26,9 +26,7 @@ export default function AdminLoginPage() {
             toast.success("Login berhasil!");
             router.push("/admin/dashboard");
         } else {
-            toast.error("Email atau password salah", {
-                description: "Gunakan: admin@temukarir.com / Temukarir888",
-            });
+            toast.error("Email atau password salah");
         }
 
         setLoading(false);
@@ -60,7 +58,7 @@ export default function AdminLoginPage() {
                             <Input
                                 id="email"
                                 type="email"
-                                placeholder="admin@temukarir.com"
+                                placeholder="email@contoh.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="pl-10 h-11 rounded-lg"
@@ -95,9 +93,6 @@ export default function AdminLoginPage() {
                         {loading ? "Memproses..." : "Masuk"}
                     </Button>
 
-                    <p className="text-xs text-center text-muted-foreground">
-                        Demo: admin@temukarir.com / Temukarir888
-                    </p>
                 </form>
             </div>
         </div>

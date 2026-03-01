@@ -48,14 +48,7 @@ export function Footer() {
                                     Tentang Kami
                                 </Link>
                             </li>
-                            <li>
-                                <Link
-                                    href="/admin/login"
-                                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                                >
-                                    Admin
-                                </Link>
-                            </li>
+
                         </ul>
                     </div>
 
