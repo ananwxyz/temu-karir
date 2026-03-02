@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Briefcase, Heart, Github, Mail } from "lucide-react";
+import Image from "next/image";
+import { Heart, Github, Mail } from "lucide-react";
 
 export function Footer() {
     return (
@@ -9,9 +10,13 @@ export function Footer() {
                     {/* Brand */}
                     <div className="space-y-4">
                         <div className="flex items-center gap-2">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                                <Briefcase className="h-4 w-4" />
-                            </div>
+                            <Image
+                                src="/logo.png"
+                                alt="Temu Karir"
+                                width={32}
+                                height={32}
+                                className="rounded-lg"
+                            />
                             <span className="text-lg font-bold gradient-text">Temu Karir</span>
                         </div>
                         <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
