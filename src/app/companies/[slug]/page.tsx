@@ -207,30 +207,55 @@ export default async function CompanyDetailPage({ params }: PageProps) {
                             Kontak & Tautan Resmi
                         </h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            {contacts.map((contact) => (
-                                <a
-                                    key={contact.label}
-                                    href={contact.value!}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-3 rounded-xl border bg-card p-4 card-hover group"
-                                >
-                                    <div
-                                        className={`flex h-10 w-10 items-center justify-center rounded-lg ${contact.bg} ${contact.color} shrink-0`}
+                            {contacts.map((contact) => {
+                                const isDisabled = contact.value === "#";
+                                if (isDisabled) {
+                                    return (
+                                        <div
+                                            key={contact.label}
+                                            className="flex items-center gap-3 rounded-xl border bg-card p-4 opacity-40 cursor-not-allowed"
+                                        >
+                                            <div
+                                                className={`flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground shrink-0`}
+                                            >
+                                                <contact.icon className="h-5 w-5" />
+                                            </div>
+                                            <div className="min-w-0 flex-1">
+                                                <p className="text-xs text-muted-foreground">
+                                                    {contact.label}
+                                                </p>
+                                                <p className="text-sm font-medium text-muted-foreground truncate">
+                                                    Belum tersedia
+                                                </p>
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                                return (
+                                    <a
+                                        key={contact.label}
+                                        href={contact.value!}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-3 rounded-xl border bg-card p-4 card-hover group"
                                     >
-                                        <contact.icon className="h-5 w-5" />
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                        <p className="text-xs text-muted-foreground">
-                                            {contact.label}
-                                        </p>
-                                        <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
-                                            {contact.displayValue || contact.label}
-                                        </p>
-                                    </div>
-                                    <ExternalLink className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                                </a>
-                            ))}
+                                        <div
+                                            className={`flex h-10 w-10 items-center justify-center rounded-lg ${contact.bg} ${contact.color} shrink-0`}
+                                        >
+                                            <contact.icon className="h-5 w-5" />
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-xs text-muted-foreground">
+                                                {contact.label}
+                                            </p>
+                                            <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
+                                                {contact.displayValue || contact.label}
+                                            </p>
+                                        </div>
+                                        <ExternalLink className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                                    </a>
+                                );
+                            })}
                         </div>
                     </div>
                 )}

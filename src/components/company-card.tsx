@@ -107,38 +107,62 @@ export function CompanyCard({ company }: CompanyCardProps) {
 
             {/* Action Buttons */}
             <div className="flex items-center gap-1.5 shrink-0">
-                <Button
-                    asChild
-                    variant="outline"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-lg border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950"
-                >
-                    <a
-                        href={company.linkedin_url || "#"}
-                        target={company.linkedin_url ? "_blank" : undefined}
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        title="LinkedIn"
+                {company.linkedin_url ? (
+                    <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 p-0 rounded-lg border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950"
+                    >
+                        <a
+                            href={company.linkedin_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            title="LinkedIn"
+                        >
+                            <Linkedin className="h-3.5 w-3.5" />
+                        </a>
+                    </Button>
+                ) : (
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        disabled
+                        className="h-8 w-8 p-0 rounded-lg"
+                        title="LinkedIn belum tersedia"
                     >
                         <Linkedin className="h-3.5 w-3.5" />
-                    </a>
-                </Button>
-                <Button
-                    asChild
-                    variant="outline"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-lg border-pink-200 dark:border-pink-800 text-pink-600 dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-950"
-                >
-                    <a
-                        href={company.instagram_url || "#"}
-                        target={company.instagram_url ? "_blank" : undefined}
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        title="Instagram"
+                    </Button>
+                )}
+                {company.instagram_url ? (
+                    <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 p-0 rounded-lg border-pink-200 dark:border-pink-800 text-pink-600 dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-950"
+                    >
+                        <a
+                            href={company.instagram_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            title="Instagram"
+                        >
+                            <Instagram className="h-3.5 w-3.5" />
+                        </a>
+                    </Button>
+                ) : (
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        disabled
+                        className="h-8 w-8 p-0 rounded-lg"
+                        title="Instagram belum tersedia"
                     >
                         <Instagram className="h-3.5 w-3.5" />
-                    </a>
-                </Button>
+                    </Button>
+                )}
                 <Button
                     asChild
                     size="sm"
