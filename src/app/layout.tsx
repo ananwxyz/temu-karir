@@ -11,7 +11,7 @@ const inter = Inter({
   display: "swap",
 });
 
-const baseUrl = "https://temu-karir.vercel.app";
+const baseUrl = "https://temukarir.com";
 
 export const metadata: Metadata = {
   title: {

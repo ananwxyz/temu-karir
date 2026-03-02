@@ -4,7 +4,7 @@ import { companies as mockCompanies } from "@/lib/data";
 import { Company } from "@/lib/types";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = "https://temu-karir.vercel.app";
+    const baseUrl = "https://temukarir.com";
 
     // Static pages
     const staticPages: MetadataRoute.Sitemap = [
