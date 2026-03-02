@@ -72,7 +72,7 @@ export default async function CompanyDetailPage({ params }: PageProps) {
     const contacts = [
         {
             label: "LinkedIn",
-            value: company.linkedin_url,
+            value: company.linkedin_url || "#",
             icon: Linkedin,
             color: "text-blue-600 dark:text-blue-400",
             bg: "bg-blue-500/10",
@@ -88,7 +88,7 @@ export default async function CompanyDetailPage({ params }: PageProps) {
         },
         {
             label: "Instagram",
-            value: company.instagram_url,
+            value: company.instagram_url || "#",
             icon: Instagram,
             color: "text-pink-600 dark:text-pink-400",
             bg: "bg-pink-500/10",
