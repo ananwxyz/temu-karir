@@ -132,20 +132,24 @@ export function Hero() {
                         <div className="relative z-10">
                             <div className="flex items-center gap-2 mb-4 text-emerald-500 font-semibold tracking-wide uppercase text-sm">
                                 <Lightbulb className="h-5 w-5" />
-                                <span>Did You Know?</span>
+                                <span>Tahukah Kamu?</span>
                             </div>
 
-                            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 leading-tight">
-                                Loker incaranmu 90% pasti diposting di website resmi perusahaan <span className="text-primary italic">duluan</span>.
+                            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4 leading-tight">
+                                Sebagian besar rekruter sebenarnya lebih menyukai kandidat yang melamar langsung melalui website karir resmi perusahaan.
                             </h2>
 
-                            <p className="text-muted-foreground text-base sm:text-lg mb-6 leading-relaxed max-w-2xl">
-                                Rekruter lebih memprioritaskan kandidat yang melamar langsung dari website karir mereka. Tapi, mencari halaman "Career" di setiap website perusahaan itu susah dan bikin pusing muter-muter.
+                            <p className="text-muted-foreground text-sm sm:text-base mb-4 leading-relaxed max-w-3xl">
+                                Mengapa? Karena itu menunjukkan inisiatif, dan data kandidat langsung masuk ke Applicant Tracking System (ATS) internal mereka tanpa perantara platform pihak ketiga. Banyak juga loker "hidden gem" yang hanya diposting di website resmi mereka!
                             </p>
 
-                            <div className="inline-flex items-center gap-2 font-medium text-foreground bg-background/50 backdrop-blur-sm px-4 py-2 rounded-lg border">
+                            <p className="text-muted-foreground text-sm sm:text-base mb-6 leading-relaxed max-w-3xl">
+                                TAPI, proses mencari halaman karir tiap perusahaan ini seringkali melelahkan. Harus buka Google, cek website resminya satu-satu (yang kadang UI-nya muter-muter), sampai akhirnya nemu tombol "Career" yang nyempil di pojokan. Waktu nyari kerja malah habis buat navigasi web. 😩
+                            </p>
+
+                            <div className="inline-flex items-center gap-2 font-medium text-foreground bg-background/50 backdrop-blur-sm px-4 py-3 rounded-lg border">
                                 <span className="text-xl">💡</span>
-                                <span>Pusing muter-muter? Pakai <span className="text-primary font-bold">temukarir.com</span> aja!</span>
+                                <span>Pakai ini aja biar hemat waktu: <span className="text-primary font-bold">temukarir.com</span></span>
                             </div>
                         </div>
                     </div>
