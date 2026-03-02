@@ -59,7 +59,7 @@ export function Navbar() {
                             className="border-primary/30 text-primary hover:bg-primary/10"
                         >
                             <a
-                                href="https://saweria.co/temukarir"
+                                href="https://kitabisa.com"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
@@ -118,7 +118,7 @@ export function Navbar() {
                                 className="w-full border-primary/30 text-primary hover:bg-primary/10"
                             >
                                 <a
-                                    href="https://saweria.co/temukarir"
+                                    href="https://kitabisa.com"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >

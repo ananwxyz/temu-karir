@@ -66,7 +66,7 @@ export function Footer() {
                         </p>
                         <div className="flex gap-3">
                             <a
-                                href="https://saweria.co/temukarir"
+                                href="https://kitabisa.com"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-2 text-xs font-medium text-primary hover:bg-primary/20 transition-colors"
