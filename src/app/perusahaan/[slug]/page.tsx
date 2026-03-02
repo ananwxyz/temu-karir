@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         openGraph: {
             title: `${company.name} — Halaman Karir Resmi | Temu Karir`,
             description: `Halaman karir resmi ${company.name}. ${company.industry} - ${company.ownership}.`,
-            url: `https://temukarir.com/companies/${company.slug}`,
+            url: `https://temukarir.com/perusahaan/${company.slug}`,
         },
     };
 }
@@ -299,4 +299,4 @@ export default async function CompanyDetailPage({ params }: PageProps) {
     );
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400; // Generate static paths and revalidate after 24 hours

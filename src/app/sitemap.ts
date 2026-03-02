@@ -31,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const companyPages: MetadataRoute.Sitemap = companies
         .filter((c: Company) => c.status === "ACTIVE")
         .map((company: Company) => ({
-            url: `${baseUrl}/companies/${company.slug}`,
+            url: `${baseUrl}/perusahaan/${company.slug}`,
             lastModified: company.updated_at
                 ? new Date(company.updated_at)
                 : new Date(),

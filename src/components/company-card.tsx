@@ -70,7 +70,7 @@ export function CompanyCard({ company }: CompanyCardProps) {
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                     <Link
-                        href={`/companies/${company.slug}`}
+                        href={`/perusahaan/${company.slug}`}
                         className="font-semibold text-foreground hover:text-primary transition-colors truncate"
                     >
                         {company.name}
