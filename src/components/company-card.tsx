@@ -61,11 +61,6 @@ function formatDate(dateStr: string | null): string {
 export function CompanyCard({ company }: CompanyCardProps) {
     return (
         <div className="card-hover rounded-xl border bg-card px-5 py-4 flex items-center gap-4">
-            {/* Initial */}
-            <div className="h-11 w-11 rounded-lg bg-muted flex items-center justify-center text-lg shrink-0 border font-semibold">
-                {company.name.charAt(0)}
-            </div>
-
             {/* Info */}
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
