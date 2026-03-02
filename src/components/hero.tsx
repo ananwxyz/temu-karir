@@ -10,7 +10,6 @@ import {
     ArrowRight,
     Building2,
     CheckCircle2,
-    MapPin,
     TrendingUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,7 @@ import { getStats as getMockStats } from "@/lib/data";
 import { getStats as getSupabaseStats } from "@/lib/supabase";
 
 export function Hero() {
-    const [stats, setStats] = useState({ total: 0, active: 0, flagged: 0, industries: 0, cities: 0 });
+    const [stats, setStats] = useState({ total: 0, active: 0, flagged: 0, pending: 0, industries: 0 });
 
     useEffect(() => {
         async function fetchStats() {
@@ -56,7 +55,7 @@ export function Hero() {
                     {/* Badge */}
                     <div className="animate-fade-in-up opacity-0 mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary border border-primary/20">
                         <Sparkles className="h-3.5 w-3.5" />
-                        Terverifikasi otomatis setiap minggu
+                        Terverifikasi otomatis secara berkala
                     </div>
 
                     {/* Title */}
@@ -113,9 +112,9 @@ export function Hero() {
                             label="Industri"
                         />
                         <StatItem
-                            icon={<MapPin className="h-5 w-5" />}
-                            value={stats.cities.toString()}
-                            label="Kota"
+                            icon={<CheckCircle2 className="h-5 w-5" />}
+                            value={stats.active.toString()}
+                            label="Terverifikasi"
                         />
                     </div>
                 </div>
@@ -134,7 +133,7 @@ export function Hero() {
                         <FeatureCard
                             icon={<Clock className="h-6 w-6" />}
                             title="Validasi Otomatis"
-                            description="Sistem kami memverifikasi keaktifan setiap halaman karir setiap minggu, memastikan data selalu up-to-date."
+                            description="Sistem kami memverifikasi keaktifan setiap halaman karir secara berkala, memastikan data selalu up-to-date."
                             delay="0.2s"
                         />
                         <FeatureCard

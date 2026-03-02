@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Briefcase, Heart } from "lucide-react";
+import { Menu, X, Briefcase, Heart, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Navbar() {
@@ -39,6 +39,13 @@ export function Navbar() {
                             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                         >
                             Tentang
+                        </Link>
+                        <Link
+                            href="/submit"
+                            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground flex items-center gap-1"
+                        >
+                            <Plus className="h-3.5 w-3.5" />
+                            Ajukan
                         </Link>
                         <Button
                             asChild
@@ -90,6 +97,13 @@ export function Navbar() {
                             onClick={() => setIsOpen(false)}
                         >
                             Tentang
+                        </Link>
+                        <Link
+                            href="/submit"
+                            className="block px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Ajukan Perusahaan
                         </Link>
                         <div className="px-3 pt-2">
                             <Button

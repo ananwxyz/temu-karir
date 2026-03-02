@@ -9,15 +9,15 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { INDUSTRIES, CITIES } from "@/lib/types";
+import { INDUSTRIES, OWNERSHIP_TYPES } from "@/lib/types";
 
 interface SearchBarProps {
     query: string;
     onQueryChange: (query: string) => void;
     industry: string;
     onIndustryChange: (industry: string) => void;
-    city: string;
-    onCityChange: (city: string) => void;
+    ownership: string;
+    onOwnershipChange: (ownership: string) => void;
     resultCount: number;
 }
 
@@ -26,8 +26,8 @@ export function SearchBar({
     onQueryChange,
     industry,
     onIndustryChange,
-    city,
-    onCityChange,
+    ownership,
+    onOwnershipChange,
     resultCount,
 }: SearchBarProps) {
     return (
@@ -52,7 +52,7 @@ export function SearchBar({
                 <div className="flex flex-wrap gap-3 flex-1">
                     <Select value={industry} onValueChange={onIndustryChange}>
                         <SelectTrigger
-                            className="w-full sm:w-[200px] h-10 rounded-lg bg-card border-border/50"
+                            className="w-full sm:w-[220px] h-10 rounded-lg bg-card border-border/50"
                             id="filter-industry"
                         >
                             <SelectValue placeholder="Semua Industri" />
@@ -67,18 +67,18 @@ export function SearchBar({
                         </SelectContent>
                     </Select>
 
-                    <Select value={city} onValueChange={onCityChange}>
+                    <Select value={ownership} onValueChange={onOwnershipChange}>
                         <SelectTrigger
-                            className="w-full sm:w-[180px] h-10 rounded-lg bg-card border-border/50"
-                            id="filter-city"
+                            className="w-full sm:w-[160px] h-10 rounded-lg bg-card border-border/50"
+                            id="filter-ownership"
                         >
-                            <SelectValue placeholder="Semua Kota" />
+                            <SelectValue placeholder="Semua Tipe" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Semua Kota</SelectItem>
-                            {CITIES.map((c) => (
-                                <SelectItem key={c} value={c}>
-                                    {c}
+                            <SelectItem value="all">Semua Tipe</SelectItem>
+                            {OWNERSHIP_TYPES.map((o) => (
+                                <SelectItem key={o} value={o}>
+                                    {o}
                                 </SelectItem>
                             ))}
                         </SelectContent>

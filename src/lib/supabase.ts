@@ -12,6 +12,7 @@ export async function getCompanies(): Promise<Company[]> {
     const { data, error } = await supabase
         .from("companies")
         .select("*")
+        .neq("status", "PENDING")
         .order("name", { ascending: true });
 
     if (error) {
@@ -40,18 +41,18 @@ export async function getCompanyBySlug(
 export async function searchCompanies(
     query?: string,
     industry?: string,
-    city?: string
+    ownership?: string
 ): Promise<Company[]> {
-    let q = supabase.from("companies").select("*");
+    let q = supabase.from("companies").select("*").neq("status", "PENDING");
 
     if (query) {
-        q = q.or(`name.ilike.%${query}%,description.ilike.%${query}%`);
+        q = q.ilike("name", `%${query}%`);
     }
     if (industry && industry !== "all") {
         q = q.eq("industry", industry);
     }
-    if (city && city !== "all") {
-        q = q.eq("city", city);
+    if (ownership && ownership !== "all") {
+        q = q.eq("ownership", ownership);
     }
 
     q = q.order("name", { ascending: true });
@@ -66,20 +67,20 @@ export async function searchCompanies(
 }
 
 export async function getStats() {
-    const { data, error } = await supabase.from("companies").select("status, industry, city");
+    const { data, error } = await supabase.from("companies").select("status, industry");
 
     if (error) {
         console.error("Error fetching stats:", error);
-        return { total: 0, active: 0, flagged: 0, industries: 0, cities: 0 };
+        return { total: 0, active: 0, flagged: 0, pending: 0, industries: 0 };
     }
 
     const companies = data || [];
     return {
-        total: companies.length,
+        total: companies.filter((c) => c.status !== "PENDING").length,
         active: companies.filter((c) => c.status === "ACTIVE").length,
         flagged: companies.filter((c) => c.status === "FLAGGED").length,
+        pending: companies.filter((c) => c.status === "PENDING").length,
         industries: [...new Set(companies.map((c) => c.industry))].length,
-        cities: [...new Set(companies.map((c) => c.city))].length,
     };
 }
 
@@ -88,7 +89,6 @@ export async function getStats() {
 export async function createCompany(
     company: Omit<Company, "id" | "created_at" | "updated_at">
 ): Promise<Company | null> {
-    // Clean data: remove undefined values, convert empty strings to null
     const cleanData: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(company)) {
         if (value === undefined || value === "") {
@@ -101,9 +101,8 @@ export async function createCompany(
     cleanData.name = company.name;
     cleanData.slug = company.slug;
     cleanData.industry = company.industry;
-    cleanData.city = company.city;
+    cleanData.ownership = company.ownership;
     cleanData.career_url = company.career_url;
-    cleanData.description = company.description || "";
     cleanData.status = company.status || "ACTIVE";
 
     const { data, error } = await supabase
@@ -179,6 +178,71 @@ export async function flagCompany(id: string): Promise<boolean> {
 
     if (error) {
         console.error("Error flagging company:", error);
+        return false;
+    }
+    return true;
+}
+
+// ─── User Submission Functions ────────────────────────────
+
+export async function createSubmission(
+    company: Omit<Company, "id" | "created_at" | "updated_at" | "status" | "hash_signature" | "last_verified_at">
+): Promise<Company | null> {
+    const cleanData: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(company)) {
+        if (value === undefined || value === "") {
+            cleanData[key] = null;
+        } else {
+            cleanData[key] = value;
+        }
+    }
+    cleanData.name = company.name;
+    cleanData.slug = company.slug;
+    cleanData.industry = company.industry;
+    cleanData.ownership = company.ownership;
+    cleanData.career_url = company.career_url;
+    cleanData.status = "PENDING";
+    cleanData.hash_signature = null;
+    cleanData.last_verified_at = null;
+
+    const { data, error } = await supabase
+        .from("companies")
+        .insert(cleanData)
+        .select()
+        .single();
+
+    if (error) {
+        console.error("Error creating submission:", error.message);
+        return null;
+    }
+    return data as Company;
+}
+
+export async function getPendingSubmissions(): Promise<Company[]> {
+    const { data, error } = await supabase
+        .from("companies")
+        .select("*")
+        .eq("status", "PENDING")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Error fetching pending submissions:", error);
+        return [];
+    }
+    return data as Company[];
+}
+
+export async function approveSubmission(id: string): Promise<boolean> {
+    const { error } = await supabase
+        .from("companies")
+        .update({
+            status: "ACTIVE",
+            updated_at: new Date().toISOString(),
+        })
+        .eq("id", id);
+
+    if (error) {
+        console.error("Error approving submission:", error);
         return false;
     }
     return true;

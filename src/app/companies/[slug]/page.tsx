@@ -5,16 +5,15 @@ import {
     ArrowLeft,
     ExternalLink,
     Mail,
-    Phone,
     Linkedin,
     MessageCircle,
-    MapPin,
     Instagram,
     CheckCircle2,
     AlertTriangle,
     Shield,
     Calendar,
     Building2,
+    Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,7 +27,6 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-    // Try Supabase first, fall back to mock
     let companies;
     try {
         companies = await getSupabaseCompanies();
@@ -54,10 +52,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     return {
         title: `${company.name} — Halaman Karir Resmi`,
-        description: `${company.description} Kunjungi halaman karir resmi ${company.name} dan lamar langsung.`,
+        description: `Kunjungi halaman karir resmi ${company.name} dan lamar langsung. ${company.industry} - ${company.ownership}.`,
         openGraph: {
             title: `${company.name} — Halaman Karir Resmi | Temu Karir`,
-            description: company.description,
+            description: `Halaman karir resmi ${company.name}. ${company.industry} - ${company.ownership}.`,
             url: `https://temukarir.com/companies/${company.slug}`,
         },
     };
@@ -89,20 +87,12 @@ export default async function CompanyDetailPage({ params }: PageProps) {
             bg: "bg-green-500/10",
         },
         {
-            label: "Google Maps",
-            value: company.maps_url,
-            icon: MapPin,
-            color: "text-red-500 dark:text-red-400",
-            bg: "bg-red-500/10",
-        },
-        {
             label: "Instagram",
             value: company.instagram_url,
             icon: Instagram,
             color: "text-pink-600 dark:text-pink-400",
             bg: "bg-pink-500/10",
         },
-
         {
             label: "Email",
             value: company.email ? `mailto:${company.email}` : null,
@@ -110,14 +100,6 @@ export default async function CompanyDetailPage({ params }: PageProps) {
             icon: Mail,
             color: "text-amber-600 dark:text-amber-400",
             bg: "bg-amber-500/10",
-        },
-        {
-            label: "Telepon",
-            value: company.phone ? `tel:${company.phone}` : null,
-            displayValue: company.phone,
-            icon: Phone,
-            color: "text-violet-600 dark:text-violet-400",
-            bg: "bg-violet-500/10",
         },
     ].filter((c) => c.value);
 
@@ -158,6 +140,11 @@ export default async function CompanyDetailPage({ params }: PageProps) {
                                         <CheckCircle2 className="h-3 w-3 mr-1" />
                                         Terverifikasi
                                     </Badge>
+                                ) : company.status === "PENDING" ? (
+                                    <Badge variant="outline" className="text-blue-600 border-blue-400 dark:text-blue-400">
+                                        <Clock className="h-3 w-3 mr-1" />
+                                        Menunggu Verifikasi
+                                    </Badge>
                                 ) : (
                                     <Badge variant="outline" className="text-amber-600 border-amber-400 dark:text-amber-400">
                                         <AlertTriangle className="h-3 w-3 mr-1" />
@@ -171,10 +158,9 @@ export default async function CompanyDetailPage({ params }: PageProps) {
                                     <Building2 className="h-3.5 w-3.5" />
                                     {company.industry}
                                 </span>
-                                <span className="flex items-center gap-1">
-                                    <MapPin className="h-3.5 w-3.5" />
-                                    {company.city}
-                                </span>
+                                <Badge variant="outline" className="text-xs font-normal">
+                                    {company.ownership}
+                                </Badge>
                                 {verifiedDate && (
                                     <span className="flex items-center gap-1">
                                         <Calendar className="h-3.5 w-3.5" />
@@ -182,10 +168,6 @@ export default async function CompanyDetailPage({ params }: PageProps) {
                                     </span>
                                 )}
                             </div>
-
-                            <p className="mt-3 text-muted-foreground leading-relaxed">
-                                {company.description}
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -283,14 +265,7 @@ export default async function CompanyDetailPage({ params }: PageProps) {
                             "@type": "Organization",
                             name: company.name,
                             url: company.career_url,
-                            description: company.description,
-                            address: {
-                                "@type": "PostalAddress",
-                                addressLocality: company.city,
-                                addressCountry: "ID",
-                            },
                             ...(company.email && { email: company.email }),
-                            ...(company.phone && { telephone: company.phone }),
                         }),
                     }}
                 />

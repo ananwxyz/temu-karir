@@ -3,15 +3,12 @@ export interface Company {
   name: string;
   slug: string;
   industry: Industry;
-  city: string;
-  description: string;
+  ownership: OwnershipType;
   career_url: string;
   hash_signature: string | null;
   email: string | null;
-  phone: string | null;
   linkedin_url: string | null;
   whatsapp: string | null;
-  maps_url: string | null;
   instagram_url: string | null;
   status: CompanyStatus;
   last_verified_at: string | null;
@@ -19,54 +16,53 @@ export interface Company {
   updated_at: string;
 }
 
-export type CompanyStatus = "ACTIVE" | "FLAGGED";
+export type CompanyStatus = "ACTIVE" | "FLAGGED" | "PENDING";
+
+export type OwnershipType = "Swasta" | "BUMN/D";
+
+export const OWNERSHIP_TYPES: OwnershipType[] = ["Swasta", "BUMN/D"];
 
 export type Industry =
-  | "Outsourcing"
-  | "Technology"
-  | "Banking & Finance"
-  | "E-Commerce"
-  | "Telekomunikasi"
-  | "FMCG"
-  | "Otomotif"
-  | "Energi & Pertambangan"
-  | "Kesehatan"
-  | "Logistik"
-  | "Media & Hiburan"
-  | "Pendidikan"
-  | "Properti & Konstruksi"
-  | "Pemerintahan"
-  | "Lainnya";
+  | "Technology & Digital"
+  | "Financial Services"
+  | "Insurance"
+  | "Investment & Venture Capital"
+  | "Legal & Professional Services"
+  | "Telecommunications"
+  | "Media & Entertainment"
+  | "Consumer Goods (FMCG)"
+  | "Retail & E-Commerce"
+  | "Manufacturing & Industrial"
+  | "Energy & Natural Resources"
+  | "Agriculture & Agribusiness"
+  | "Healthcare & Pharmaceutical"
+  | "Transportation & Logistics"
+  | "Property & Construction"
+  | "Hospitality & Tourism"
+  | "Education"
+  | "Government & Public Sector"
+  | "Non-Profit & International Organization"
+  | "Outsourcing";
 
 export const INDUSTRIES: Industry[] = [
+  "Technology & Digital",
+  "Financial Services",
+  "Insurance",
+  "Investment & Venture Capital",
+  "Legal & Professional Services",
+  "Telecommunications",
+  "Media & Entertainment",
+  "Consumer Goods (FMCG)",
+  "Retail & E-Commerce",
+  "Manufacturing & Industrial",
+  "Energy & Natural Resources",
+  "Agriculture & Agribusiness",
+  "Healthcare & Pharmaceutical",
+  "Transportation & Logistics",
+  "Property & Construction",
+  "Hospitality & Tourism",
+  "Education",
+  "Government & Public Sector",
+  "Non-Profit & International Organization",
   "Outsourcing",
-  "Technology",
-  "Banking & Finance",
-  "E-Commerce",
-  "Telekomunikasi",
-  "FMCG",
-  "Otomotif",
-  "Energi & Pertambangan",
-  "Kesehatan",
-  "Logistik",
-  "Media & Hiburan",
-  "Pendidikan",
-  "Properti & Konstruksi",
-  "Pemerintahan",
-  "Lainnya",
-];
-
-export const CITIES: string[] = [
-  "Jakarta",
-  "Bandung",
-  "Surabaya",
-  "Yogyakarta",
-  "Medan",
-  "Semarang",
-  "Makassar",
-  "Bali",
-  "Tangerang",
-  "Bekasi",
-  "Bogor",
-  "Malang",
 ];

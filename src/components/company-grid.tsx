@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { SearchBar } from "@/components/search-bar";
 import { CompanyCard } from "@/components/company-card";
 import { searchCompanies as mockSearch } from "@/lib/data";
@@ -11,7 +11,7 @@ import { Building2, Loader2 } from "lucide-react";
 export function CompanyGrid() {
     const [query, setQuery] = useState("");
     const [industry, setIndustry] = useState("all");
-    const [city, setCity] = useState("all");
+    const [ownership, setOwnership] = useState("all");
     const [companies, setCompanies] = useState<Company[]>([]);
     const [loading, setLoading] = useState(true);
     const [useSupabase, setUseSupabase] = useState(true);
@@ -24,25 +24,25 @@ export function CompanyGrid() {
             setLoading(true);
             try {
                 if (useSupabase) {
-                    const results = await supabaseSearch(query, industry, city);
+                    const results = await supabaseSearch(query, industry, ownership);
                     if (!cancelled) {
-                        if (results.length > 0 || query || industry !== "all" || city !== "all") {
+                        if (results.length > 0 || query || industry !== "all" || ownership !== "all") {
                             setCompanies(results);
                         } else {
                             // Supabase empty (no migration yet), fall back to mock
                             setUseSupabase(false);
-                            setCompanies(mockSearch(query, industry, city));
+                            setCompanies(mockSearch(query, industry, ownership));
                         }
                     }
                 } else {
                     if (!cancelled) {
-                        setCompanies(mockSearch(query, industry, city));
+                        setCompanies(mockSearch(query, industry, ownership));
                     }
                 }
             } catch {
                 if (!cancelled) {
                     setUseSupabase(false);
-                    setCompanies(mockSearch(query, industry, city));
+                    setCompanies(mockSearch(query, industry, ownership));
                 }
             }
             if (!cancelled) setLoading(false);
@@ -53,7 +53,7 @@ export function CompanyGrid() {
             cancelled = true;
             clearTimeout(debounce);
         };
-    }, [query, industry, city, useSupabase]);
+    }, [query, industry, ownership, useSupabase]);
 
     return (
         <section id="direktori" className="py-16 sm:py-20">
@@ -64,7 +64,7 @@ export function CompanyGrid() {
                     </h2>
                     <p className="text-muted-foreground max-w-2xl mx-auto">
                         Temukan halaman karir resmi dari berbagai perusahaan ternama di
-                        Indonesia. Semua data diverifikasi secara otomatis setiap minggu.
+                        Indonesia. Semua data diverifikasi secara otomatis.
                     </p>
                 </div>
 
@@ -73,8 +73,8 @@ export function CompanyGrid() {
                     onQueryChange={setQuery}
                     industry={industry}
                     onIndustryChange={setIndustry}
-                    city={city}
-                    onCityChange={setCity}
+                    ownership={ownership}
+                    onOwnershipChange={setOwnership}
                     resultCount={companies.length}
                 />
 

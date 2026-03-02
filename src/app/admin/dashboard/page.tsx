@@ -17,12 +17,14 @@ import {
     BarChart3,
     ArrowLeft,
     Loader2,
+    Globe,
+    Clock,
+    ThumbsUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
 import {
     Table,
     TableBody,
@@ -46,7 +48,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Company, INDUSTRIES, CITIES, Industry } from "@/lib/types";
+import { Company, INDUSTRIES, OWNERSHIP_TYPES, Industry, OwnershipType } from "@/lib/types";
 import { companies as mockCompanies } from "@/lib/data";
 import {
     getCompanies as getSupabaseCompanies,
@@ -54,6 +56,8 @@ import {
     updateCompany as supabaseUpdate,
     deleteCompany as supabaseDelete,
     validateCompany as supabaseValidate,
+    getPendingSubmissions,
+    approveSubmission as supabaseApprove,
 } from "@/lib/supabase";
 
 function slugify(str: string): string {
@@ -66,6 +70,7 @@ function slugify(str: string): string {
 export default function AdminDashboard() {
     const router = useRouter();
     const [companies, setCompanies] = useState<Company[]>([]);
+    const [pendingCompanies, setPendingCompanies] = useState<Company[]>([]);
     const [search, setSearch] = useState("");
     const [filterStatus, setFilterStatus] = useState<string>("all");
     const [isAddOpen, setIsAddOpen] = useState(false);
@@ -86,6 +91,8 @@ export default function AdminDashboard() {
                 const data = await getSupabaseCompanies();
                 if (data.length > 0) {
                     setCompanies(data);
+                    const pending = await getPendingSubmissions();
+                    setPendingCompanies(pending);
                 } else {
                     setUseSupabase(false);
                     setCompanies([...mockCompanies]);
@@ -108,6 +115,7 @@ export default function AdminDashboard() {
         total: companies.length,
         active: companies.filter((c) => c.status === "ACTIVE").length,
         flagged: companies.filter((c) => c.status === "FLAGGED").length,
+        pending: pendingCompanies.length,
     };
 
     const filteredCompanies = companies.filter((c) => {
@@ -123,15 +131,12 @@ export default function AdminDashboard() {
             name: formData.get("name") as string,
             slug: slugify(formData.get("name") as string),
             industry: formData.get("industry") as Industry,
-            city: formData.get("city") as string,
-            description: formData.get("description") as string,
+            ownership: formData.get("ownership") as OwnershipType,
             career_url: formData.get("career_url") as string,
             hash_signature: null,
             email: (formData.get("email") as string) || null,
-            phone: (formData.get("phone") as string) || null,
             linkedin_url: (formData.get("linkedin_url") as string) || null,
             whatsapp: (formData.get("whatsapp") as string) || null,
-            maps_url: (formData.get("maps_url") as string) || null,
             instagram_url: (formData.get("instagram_url") as string) || null,
             status: "ACTIVE" as const,
             last_verified_at: null,
@@ -165,14 +170,11 @@ export default function AdminDashboard() {
             name: formData.get("name") as string,
             slug: slugify(formData.get("name") as string),
             industry: formData.get("industry") as Industry,
-            city: formData.get("city") as string,
-            description: formData.get("description") as string,
+            ownership: formData.get("ownership") as OwnershipType,
             career_url: formData.get("career_url") as string,
             email: (formData.get("email") as string) || null,
-            phone: (formData.get("phone") as string) || null,
             linkedin_url: (formData.get("linkedin_url") as string) || null,
             whatsapp: (formData.get("whatsapp") as string) || null,
-            maps_url: (formData.get("maps_url") as string) || null,
             instagram_url: (formData.get("instagram_url") as string) || null,
         };
 
@@ -244,6 +246,40 @@ export default function AdminDashboard() {
         );
     };
 
+    const handleApprove = async (company: Company) => {
+        if (useSupabase) {
+            const success = await supabaseApprove(company.id);
+            if (success) {
+                setPendingCompanies((prev) => prev.filter((c) => c.id !== company.id));
+                setCompanies((prev) => [{ ...company, status: "ACTIVE" as const }, ...prev]);
+                toast.success(`${company.name} berhasil disetujui`);
+            } else {
+                toast.error("Gagal menyetujui perusahaan");
+            }
+        } else {
+            setPendingCompanies((prev) => prev.filter((c) => c.id !== company.id));
+            setCompanies((prev) => [{ ...company, status: "ACTIVE" as const }, ...prev]);
+            toast.success(`${company.name} berhasil disetujui`);
+        }
+    };
+
+    const handleRejectSubmission = async (company: Company) => {
+        if (!confirm(`Tolak pengajuan ${company.name}?`)) return;
+
+        if (useSupabase) {
+            const success = await supabaseDelete(company.id);
+            if (success) {
+                setPendingCompanies((prev) => prev.filter((c) => c.id !== company.id));
+                toast.success(`Pengajuan ${company.name} ditolak`);
+            } else {
+                toast.error("Gagal menolak pengajuan");
+            }
+        } else {
+            setPendingCompanies((prev) => prev.filter((c) => c.id !== company.id));
+            toast.success(`Pengajuan ${company.name} ditolak`);
+        }
+    };
+
     if (loading) {
         return (
             <div className="min-h-[80vh] flex items-center justify-center gap-3">
@@ -294,7 +330,7 @@ export default function AdminDashboard() {
 
             <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 space-y-6">
                 {/* Stats */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <div className="rounded-xl border bg-card p-5">
                         <div className="flex items-center gap-3">
                             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -302,7 +338,7 @@ export default function AdminDashboard() {
                             </div>
                             <div>
                                 <p className="text-2xl font-bold text-foreground">{stats.total}</p>
-                                <p className="text-xs text-muted-foreground">Total Perusahaan</p>
+                                <p className="text-xs text-muted-foreground">Total</p>
                             </div>
                         </div>
                     </div>
@@ -313,7 +349,7 @@ export default function AdminDashboard() {
                             </div>
                             <div>
                                 <p className="text-2xl font-bold text-foreground">{stats.active}</p>
-                                <p className="text-xs text-muted-foreground">Aktif & Terverifikasi</p>
+                                <p className="text-xs text-muted-foreground">Aktif</p>
                             </div>
                         </div>
                     </div>
@@ -324,7 +360,18 @@ export default function AdminDashboard() {
                             </div>
                             <div>
                                 <p className="text-2xl font-bold text-foreground">{stats.flagged}</p>
-                                <p className="text-xs text-muted-foreground">Perlu Tinjauan</p>
+                                <p className="text-xs text-muted-foreground">Flagged</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="rounded-xl border bg-card p-5">
+                        <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                <Clock className="h-5 w-5 text-blue-500" />
+                            </div>
+                            <div>
+                                <p className="text-2xl font-bold text-foreground">{stats.pending}</p>
+                                <p className="text-xs text-muted-foreground">Pending</p>
                             </div>
                         </div>
                     </div>
@@ -353,6 +400,57 @@ export default function AdminDashboard() {
                     </div>
                 )}
 
+                {/* Pending Submissions */}
+                {pendingCompanies.length > 0 && (
+                    <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4">
+                        <div className="flex items-center gap-2 mb-3">
+                            <Clock className="h-4 w-4 text-blue-500" />
+                            <p className="text-sm font-medium text-blue-700 dark:text-blue-400">
+                                {pendingCompanies.length} pengajuan perusahaan baru menunggu persetujuan
+                            </p>
+                        </div>
+                        <div className="space-y-2">
+                            {pendingCompanies.map((company) => (
+                                <div
+                                    key={company.id}
+                                    className="flex items-center justify-between gap-3 rounded-lg border bg-card p-3"
+                                >
+                                    <div className="flex items-center gap-3 min-w-0">
+                                        <div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center text-xs border shrink-0">
+                                            {company.name.charAt(0)}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-sm font-medium truncate">{company.name}</p>
+                                            <p className="text-xs text-muted-foreground">
+                                                {company.industry} · {company.ownership}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-1.5 shrink-0">
+                                        <Button
+                                            size="sm"
+                                            className="h-7 rounded-md text-xs bg-emerald-600 hover:bg-emerald-700"
+                                            onClick={() => handleApprove(company)}
+                                        >
+                                            <ThumbsUp className="mr-1 h-3 w-3" />
+                                            Setuju
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            className="h-7 rounded-md text-xs text-destructive hover:bg-destructive/10"
+                                            onClick={() => handleRejectSubmission(company)}
+                                        >
+                                            <Trash2 className="mr-1 h-3 w-3" />
+                                            Tolak
+                                        </Button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 {/* Toolbar */}
                 <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
                     <div className="flex gap-3 flex-1 w-full sm:w-auto">
@@ -378,20 +476,29 @@ export default function AdminDashboard() {
                         </Select>
                     </div>
 
-                    <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-                        <DialogTrigger asChild>
-                            <Button className="rounded-lg" id="btn-add-company">
-                                <Plus className="mr-1.5 h-4 w-4" />
-                                Tambah Perusahaan
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-                            <DialogHeader>
-                                <DialogTitle>Tambah Perusahaan Baru</DialogTitle>
-                            </DialogHeader>
-                            <CompanyForm onSubmit={handleAdd} />
-                        </DialogContent>
-                    </Dialog>
+                    <div className="flex items-center gap-2">
+                        <Button asChild variant="outline" className="rounded-lg">
+                            <Link href="/admin/discovery">
+                                <Globe className="mr-1.5 h-4 w-4" />
+                                Discovery Scanner
+                            </Link>
+                        </Button>
+
+                        <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                            <DialogTrigger asChild>
+                                <Button className="rounded-lg" id="btn-add-company">
+                                    <Plus className="mr-1.5 h-4 w-4" />
+                                    Tambah Perusahaan
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+                                <DialogHeader>
+                                    <DialogTitle>Tambah Perusahaan Baru</DialogTitle>
+                                </DialogHeader>
+                                <CompanyForm onSubmit={handleAdd} />
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 </div>
 
                 {/* Table */}
@@ -401,7 +508,7 @@ export default function AdminDashboard() {
                             <TableRow className="hover:bg-transparent">
                                 <TableHead className="w-[300px]">Perusahaan</TableHead>
                                 <TableHead>Industri</TableHead>
-                                <TableHead>Kota</TableHead>
+                                <TableHead>Tipe</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Terakhir Diverifikasi</TableHead>
                                 <TableHead className="text-right">Aksi</TableHead>
@@ -432,8 +539,10 @@ export default function AdminDashboard() {
                                     <TableCell className="text-sm text-muted-foreground">
                                         {company.industry}
                                     </TableCell>
-                                    <TableCell className="text-sm text-muted-foreground">
-                                        {company.city}
+                                    <TableCell>
+                                        <Badge variant="outline" className="text-xs font-normal">
+                                            {company.ownership}
+                                        </Badge>
                                     </TableCell>
                                     <TableCell>
                                         {company.status === "ACTIVE" ? (
@@ -577,40 +686,24 @@ function CompanyForm({
                     </select>
                 </div>
                 <div className="space-y-1.5">
-                    <Label htmlFor="city" className="text-xs font-medium">
-                        Kota *
+                    <Label htmlFor="ownership" className="text-xs font-medium">
+                        Tipe Kepemilikan *
                     </Label>
                     <select
-                        id="city"
-                        name="city"
-                        defaultValue={initialData?.city || "Jakarta"}
+                        id="ownership"
+                        name="ownership"
+                        defaultValue={initialData?.ownership || "Swasta"}
                         required
                         className="w-full h-9 rounded-lg border bg-background px-3 text-sm"
                     >
-                        {CITIES.map((c) => (
-                            <option key={c} value={c}>
-                                {c}
+                        {OWNERSHIP_TYPES.map((o) => (
+                            <option key={o} value={o}>
+                                {o}
                             </option>
                         ))}
                     </select>
                 </div>
             </div>
-
-            <div className="space-y-1.5">
-                <Label htmlFor="description" className="text-xs font-medium">
-                    Deskripsi *
-                </Label>
-                <Textarea
-                    id="description"
-                    name="description"
-                    defaultValue={initialData?.description}
-                    required
-                    rows={2}
-                    className="rounded-lg text-sm"
-                />
-            </div>
-
-
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
@@ -622,17 +715,6 @@ function CompanyForm({
                         name="email"
                         type="email"
                         defaultValue={initialData?.email || ""}
-                        className="h-9 rounded-lg text-sm"
-                    />
-                </div>
-                <div className="space-y-1.5">
-                    <Label htmlFor="phone" className="text-xs font-medium">
-                        Telepon
-                    </Label>
-                    <Input
-                        id="phone"
-                        name="phone"
-                        defaultValue={initialData?.phone || ""}
                         className="h-9 rounded-lg text-sm"
                     />
                 </div>
@@ -660,18 +742,6 @@ function CompanyForm({
                     />
                 </div>
                 <div className="space-y-1.5">
-                    <Label htmlFor="maps_url" className="text-xs font-medium">
-                        Google Maps URL
-                    </Label>
-                    <Input
-                        id="maps_url"
-                        name="maps_url"
-                        type="url"
-                        defaultValue={initialData?.maps_url || ""}
-                        className="h-9 rounded-lg text-sm"
-                    />
-                </div>
-                <div className="space-y-1.5">
                     <Label htmlFor="instagram_url" className="text-xs font-medium">
                         Instagram URL
                     </Label>
@@ -683,7 +753,6 @@ function CompanyForm({
                         className="h-9 rounded-lg text-sm"
                     />
                 </div>
-
             </div>
 
             <div className="flex justify-end gap-3 pt-2">
