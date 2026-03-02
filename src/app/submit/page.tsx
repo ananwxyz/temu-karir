@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { INDUSTRIES, OWNERSHIP_TYPES, Industry, OwnershipType } from "@/lib/types";
 import { createSubmission } from "@/lib/supabase";
-import { companies as mockCompanies } from "@/lib/data";
 
 function slugify(str: string): string {
     return str
@@ -54,16 +53,11 @@ export default function SubmitCompanyPage() {
             if (result) {
                 setSubmitted(true);
             } else {
-                // Fallback to mock — just show success
-                const exists = mockCompanies.find((c) => c.slug === slug);
-                if (exists) {
-                    setError("Perusahaan dengan nama serupa sudah ada di direktori.");
-                } else {
-                    setSubmitted(true);
-                }
+                setError("Gagal mengirim data. Pastikan nama perusahaan belum terdaftar dan coba lagi.");
             }
-        } catch {
-            setSubmitted(true); // Still show success for UX
+        } catch (err) {
+            console.error("Submission error:", err);
+            setError("Terjadi kesalahan saat mengirim data. Silakan coba lagi.");
         }
         setLoading(false);
     };
@@ -176,7 +170,7 @@ export default function SubmitCompanyPage() {
                                     id="industry"
                                     name="industry"
                                     required
-                                    defaultValue="Technology"
+                                    defaultValue="Technology & Digital"
                                     className="w-full h-10 rounded-lg border bg-background px-3 text-sm"
                                 >
                                     {INDUSTRIES.map((ind) => (

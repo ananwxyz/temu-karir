@@ -20,6 +20,10 @@ import {
     Globe,
     Clock,
     ThumbsUp,
+    Linkedin,
+    Instagram,
+    Mail,
+    MessageCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -409,41 +413,80 @@ export default function AdminDashboard() {
                                 {pendingCompanies.length} pengajuan perusahaan baru menunggu persetujuan
                             </p>
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             {pendingCompanies.map((company) => (
                                 <div
                                     key={company.id}
-                                    className="flex items-center justify-between gap-3 rounded-lg border bg-card p-3"
+                                    className="rounded-lg border bg-card p-4"
                                 >
-                                    <div className="flex items-center gap-3 min-w-0">
-                                        <div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center text-xs border shrink-0">
-                                            {company.name.charAt(0)}
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="flex items-center gap-3 min-w-0">
+                                            <div className="h-10 w-10 rounded-md bg-muted flex items-center justify-center text-sm font-medium border shrink-0">
+                                                {company.name.charAt(0)}
+                                            </div>
+                                            <div className="min-w-0">
+                                                <p className="text-sm font-semibold">{company.name}</p>
+                                                <p className="text-xs text-muted-foreground">
+                                                    {company.industry} · {company.ownership}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div className="min-w-0">
-                                            <p className="text-sm font-medium truncate">{company.name}</p>
-                                            <p className="text-xs text-muted-foreground">
-                                                {company.industry} · {company.ownership}
-                                            </p>
+                                        <div className="flex items-center gap-1.5 shrink-0">
+                                            <Button
+                                                size="sm"
+                                                className="h-7 rounded-md text-xs bg-emerald-600 hover:bg-emerald-700"
+                                                onClick={() => handleApprove(company)}
+                                            >
+                                                <ThumbsUp className="mr-1 h-3 w-3" />
+                                                Setuju
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                className="h-7 rounded-md text-xs text-destructive hover:bg-destructive/10"
+                                                onClick={() => handleRejectSubmission(company)}
+                                            >
+                                                <Trash2 className="mr-1 h-3 w-3" />
+                                                Tolak
+                                            </Button>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-1.5 shrink-0">
-                                        <Button
-                                            size="sm"
-                                            className="h-7 rounded-md text-xs bg-emerald-600 hover:bg-emerald-700"
-                                            onClick={() => handleApprove(company)}
-                                        >
-                                            <ThumbsUp className="mr-1 h-3 w-3" />
-                                            Setuju
-                                        </Button>
-                                        <Button
-                                            size="sm"
-                                            variant="outline"
-                                            className="h-7 rounded-md text-xs text-destructive hover:bg-destructive/10"
-                                            onClick={() => handleRejectSubmission(company)}
-                                        >
-                                            <Trash2 className="mr-1 h-3 w-3" />
-                                            Tolak
-                                        </Button>
+                                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                        <div className="flex items-center gap-1.5 text-muted-foreground">
+                                            <ExternalLink className="h-3 w-3 shrink-0" />
+                                            <span className="font-medium text-foreground/70">Karir:</span>
+                                            <a href={company.career_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline truncate">
+                                                {company.career_url}
+                                            </a>
+                                        </div>
+                                        {company.linkedin_url && (
+                                            <div className="flex items-center gap-1.5 text-muted-foreground">
+                                                <Linkedin className="h-3 w-3 shrink-0 text-blue-500" />
+                                                <a href={company.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline truncate">
+                                                    {company.linkedin_url}
+                                                </a>
+                                            </div>
+                                        )}
+                                        {company.instagram_url && (
+                                            <div className="flex items-center gap-1.5 text-muted-foreground">
+                                                <Instagram className="h-3 w-3 shrink-0 text-pink-500" />
+                                                <a href={company.instagram_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline truncate">
+                                                    {company.instagram_url}
+                                                </a>
+                                            </div>
+                                        )}
+                                        {company.email && (
+                                            <div className="flex items-center gap-1.5 text-muted-foreground">
+                                                <Mail className="h-3 w-3 shrink-0" />
+                                                <span className="truncate">{company.email}</span>
+                                            </div>
+                                        )}
+                                        {company.whatsapp && (
+                                            <div className="flex items-center gap-1.5 text-muted-foreground">
+                                                <MessageCircle className="h-3 w-3 shrink-0 text-green-500" />
+                                                <span className="truncate">{company.whatsapp}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ))}
