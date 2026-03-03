@@ -32,7 +32,7 @@ function getIndustryEmoji(industry: string): string {
         "Healthcare & Pharmaceutical": "🏥",
         "Transportation & Logistics": "🚛",
         "Property & Construction": "🏗️",
-        "Hospitality & Tourism": "🏨",
+        "Hospitality & FnB": "🏨",
         "Education": "🎓",
         "Government & Public Sector": "🏛️",
         "Non-Profit & International Organization": "🌍",

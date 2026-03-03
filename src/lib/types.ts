@@ -38,7 +38,7 @@ export type Industry =
   | "Healthcare & Pharmaceutical"
   | "Transportation & Logistics"
   | "Property & Construction"
-  | "Hospitality & Tourism"
+  | "Hospitality & FnB"
   | "Education"
   | "Government & Public Sector"
   | "Non-Profit & International Organization"
@@ -60,7 +60,7 @@ export const INDUSTRIES: Industry[] = [
   "Healthcare & Pharmaceutical",
   "Transportation & Logistics",
   "Property & Construction",
-  "Hospitality & Tourism",
+  "Hospitality & FnB",
   "Education",
   "Government & Public Sector",
   "Non-Profit & International Organization",
