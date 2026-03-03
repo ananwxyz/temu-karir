@@ -61,8 +61,7 @@ export function Footer() {
                     <div className="space-y-4">
                         <h3 className="text-sm font-semibold text-foreground">Dukungan</h3>
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                            Temu Karir adalah proyek gratis dan open-source. Bantu kami tetap
-                            berjalan dengan donasi.
+                            Temu Karir adalah proyek gratis dan open-source. Bantu kami untuk mengembangkannya dengan berpartisipasi menambahkan database perusahaan.
                         </p>
                         <div className="flex gap-3">
                             <a
@@ -87,8 +86,7 @@ export function Footer() {
 
                 <div className="mt-10 border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-xs text-muted-foreground">
-                        © {new Date().getFullYear()} Temu Karir. Dibuat dengan{" "}
-                        <Heart className="inline h-3 w-3 text-primary" /> di Indonesia.
+                        © {new Date().getFullYear()} Temu Karir. Made with coffee and questionable life choices. - <a href="https://ananw.xyz" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">ananw.xyz</a>
                     </p>
                     <div className="flex items-center gap-4">
                         <a
