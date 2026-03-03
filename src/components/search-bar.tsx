@@ -87,7 +87,7 @@ export function SearchBar({
                     </Select>
 
                     <Button asChild variant="outline" className="w-full sm:w-auto text-muted-foreground hover:text-foreground">
-                        <Link href="mailto:hello@temukarir.com?subject=Koreksi%20Data%20Perusahaan">
+                        <Link href="/koreksi">
                             <PenLine className="mr-2 h-4 w-4" />
                             Ajukan Koreksi
                         </Link>
