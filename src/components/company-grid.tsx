@@ -24,9 +24,8 @@ export function CompanyGrid() {
     const [loading, setLoading] = useState(true);
     const [useSupabase, setUseSupabase] = useState(true);
 
-    // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(50);
+    const [pageSize, setPageSize] = useState(100);
 
     // Reset page to 1 whenever filters change
     useEffect(() => {
@@ -118,7 +117,7 @@ export function CompanyGrid() {
                     </div>
                 ) : totalItems > 0 ? (
                     <>
-                        <div className="mt-8 flex flex-col gap-3">
+                        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {currentCompanies.map((company, i) => (
                                 <div
                                     key={company.id}
@@ -146,8 +145,9 @@ export function CompanyGrid() {
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="50">50</SelectItem>
                                             <SelectItem value="100">100</SelectItem>
+                                            <SelectItem value="200">200</SelectItem>
+                                            <SelectItem value={Math.max(10000, totalItems).toString()}>Semua</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <span>per halaman</span>
