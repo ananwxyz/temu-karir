@@ -1,6 +1,8 @@
 "use client";
 
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, Plus } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
     Select,
@@ -83,9 +85,16 @@ export function SearchBar({
                             ))}
                         </SelectContent>
                     </Select>
+
+                    <Button asChild className="w-full sm:w-auto">
+                        <Link href="/submit">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Ajukan Perusahaan
+                        </Link>
+                    </Button>
                 </div>
 
-                <p className="text-sm text-muted-foreground whitespace-nowrap">
+                <p className="text-sm text-muted-foreground whitespace-nowrap hidden md:block">
                     <span className="font-semibold text-foreground">{resultCount}</span>{" "}
                     perusahaan ditemukan
                 </p>
