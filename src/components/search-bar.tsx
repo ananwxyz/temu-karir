@@ -86,7 +86,7 @@ export function SearchBar({
                         </SelectContent>
                     </Select>
 
-                    <Button asChild variant="outline" className="w-full sm:w-auto text-muted-foreground hover:text-foreground">
+                    <Button asChild className="w-full sm:w-auto">
                         <Link href="/koreksi">
                             <PenLine className="mr-2 h-4 w-4" />
                             Ajukan Koreksi
