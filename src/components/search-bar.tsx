@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, SlidersHorizontal, Plus } from "lucide-react";
+import { Search, SlidersHorizontal, Plus, PenLine } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -85,6 +85,13 @@ export function SearchBar({
                             ))}
                         </SelectContent>
                     </Select>
+
+                    <Button asChild variant="outline" className="w-full sm:w-auto text-muted-foreground hover:text-foreground">
+                        <Link href="mailto:hello@temukarir.com?subject=Koreksi%20Data%20Perusahaan">
+                            <PenLine className="mr-2 h-4 w-4" />
+                            Ajukan Koreksi
+                        </Link>
+                    </Button>
 
                     <Button asChild className="w-full sm:w-auto">
                         <Link href="/submit">
