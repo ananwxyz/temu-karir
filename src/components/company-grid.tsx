@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { SearchBar } from "@/components/search-bar";
 import { CompanyCard } from "@/components/company-card";
 import { searchCompanies as mockSearch } from "@/lib/data";
-import { searchCompanies as supabaseSearch } from "@/lib/supabase";
+import { searchCompaniesPaginated } from "@/lib/supabase";
 import { Company } from "@/lib/types";
 import { Building2, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,19 +20,21 @@ export function CompanyGrid() {
     const [query, setQuery] = useState("");
     const [industry, setIndustry] = useState("all");
     const [ownership, setOwnership] = useState("all");
+
     const [companies, setCompanies] = useState<Company[]>([]);
+    const [totalCount, setTotalCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const [useSupabase, setUseSupabase] = useState(true);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(100);
 
-    // Reset page to 1 whenever filters change
+    // Reset page to 1 whenever filters or page size change
     useEffect(() => {
         setCurrentPage(1);
-    }, [query, industry, ownership]);
+    }, [query, industry, ownership, pageSize]);
 
-    // Fetch from Supabase on mount and when filters change
+    // Fetch paginated data from Supabase (or fallback to mock)
     useEffect(() => {
         let cancelled = false;
 
@@ -40,25 +42,40 @@ export function CompanyGrid() {
             setLoading(true);
             try {
                 if (useSupabase) {
-                    const results = await supabaseSearch(query, industry, ownership);
+                    const { data, count } = await searchCompaniesPaginated(
+                        query,
+                        industry,
+                        ownership,
+                        currentPage,
+                        pageSize
+                    );
                     if (!cancelled) {
-                        if (results.length > 0 || query || industry !== "all" || ownership !== "all") {
-                            setCompanies(results);
-                        } else {
-                            // Supabase empty (no migration yet), fall back to mock
+                        if (count > 0 || query || industry !== "all" || ownership !== "all") {
+                            setCompanies(data);
+                            setTotalCount(count);
+                        } else if (data.length === 0 && count === 0 && !query && industry === "all" && ownership === "all") {
+                            // Supabase empty, fall back to mock
                             setUseSupabase(false);
-                            setCompanies(mockSearch(query, industry, ownership));
+                            const mock = mockSearch(query, industry, ownership);
+                            setCompanies(mock.slice(0, pageSize));
+                            setTotalCount(mock.length);
                         }
                     }
                 } else {
                     if (!cancelled) {
-                        setCompanies(mockSearch(query, industry, ownership));
+                        const mock = mockSearch(query, industry, ownership);
+                        const from = (currentPage - 1) * pageSize;
+                        setCompanies(mock.slice(from, from + pageSize));
+                        setTotalCount(mock.length);
                     }
                 }
             } catch {
                 if (!cancelled) {
                     setUseSupabase(false);
-                    setCompanies(mockSearch(query, industry, ownership));
+                    const mock = mockSearch(query, industry, ownership);
+                    const from = (currentPage - 1) * pageSize;
+                    setCompanies(mock.slice(from, from + pageSize));
+                    setTotalCount(mock.length);
                 }
             }
             if (!cancelled) setLoading(false);
@@ -69,23 +86,9 @@ export function CompanyGrid() {
             cancelled = true;
             clearTimeout(debounce);
         };
-    }, [query, industry, ownership, useSupabase]);
+    }, [query, industry, ownership, currentPage, pageSize, useSupabase]);
 
-    // Calculate pagination data
-    const totalItems = companies.length;
-    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-
-    // Ensure currentPage is valid if pageSize changes or results shrink
-    useEffect(() => {
-        if (currentPage > totalPages && totalPages > 0) {
-            setCurrentPage(totalPages);
-        }
-    }, [totalPages, currentPage]);
-
-    const currentCompanies = useMemo(() => {
-        const startIndex = (currentPage - 1) * pageSize;
-        return companies.slice(startIndex, startIndex + pageSize);
-    }, [companies, currentPage, pageSize]);
+    const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
     return (
         <section id="direktori" className="py-16 sm:py-20">
@@ -107,7 +110,7 @@ export function CompanyGrid() {
                     onIndustryChange={setIndustry}
                     ownership={ownership}
                     onOwnershipChange={setOwnership}
-                    resultCount={totalItems}
+                    resultCount={totalCount}
                 />
 
                 {loading ? (
@@ -115,14 +118,14 @@ export function CompanyGrid() {
                         <Loader2 className="h-5 w-5 animate-spin" />
                         <span>Memuat data perusahaan...</span>
                     </div>
-                ) : totalItems > 0 ? (
+                ) : companies.length > 0 ? (
                     <>
                         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {currentCompanies.map((company, i) => (
+                            {companies.map((company, i) => (
                                 <div
                                     key={company.id}
                                     className="animate-fade-in-up opacity-0"
-                                    style={{ animationDelay: `${(i % pageSize) * 0.03}s`, animationFillMode: "forwards" }}
+                                    style={{ animationDelay: `${i * 0.03}s`, animationFillMode: "forwards" }}
                                 >
                                     <CompanyCard company={company} />
                                 </div>
@@ -130,7 +133,7 @@ export function CompanyGrid() {
                         </div>
 
                         {/* Pagination Controls */}
-                        {totalItems > 10 && (
+                        {totalCount > pageSize && (
                             <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 border-t pt-6">
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                     <span>Tampilkan</span>
@@ -138,7 +141,6 @@ export function CompanyGrid() {
                                         value={pageSize.toString()}
                                         onValueChange={(val) => {
                                             setPageSize(Number(val));
-                                            setCurrentPage(1);
                                         }}
                                     >
                                         <SelectTrigger className="h-8 w-[70px]">
@@ -147,7 +149,6 @@ export function CompanyGrid() {
                                         <SelectContent>
                                             <SelectItem value="100">100</SelectItem>
                                             <SelectItem value="200">200</SelectItem>
-                                            <SelectItem value={Math.max(10000, totalItems).toString()}>Semua</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <span>per halaman</span>
@@ -156,6 +157,7 @@ export function CompanyGrid() {
                                 <div className="flex items-center gap-4">
                                     <div className="text-sm text-muted-foreground">
                                         Halaman <span className="font-medium text-foreground">{currentPage}</span> dari <span className="font-medium text-foreground">{totalPages}</span>
+                                        <span className="ml-2 text-xs">({totalCount} perusahaan)</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Button

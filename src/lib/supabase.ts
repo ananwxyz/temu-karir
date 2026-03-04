@@ -66,6 +66,60 @@ export async function searchCompanies(
     return data as Company[];
 }
 
+export async function searchCompaniesPaginated(
+    query?: string,
+    industry?: string,
+    ownership?: string,
+    page: number = 1,
+    pageSize: number = 100
+): Promise<{ data: Company[]; count: number }> {
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    // Count query
+    let countQ = supabase
+        .from("companies")
+        .select("*", { count: "exact", head: true })
+        .neq("status", "PENDING");
+
+    // Data query
+    let dataQ = supabase
+        .from("companies")
+        .select("*")
+        .neq("status", "PENDING");
+
+    if (query) {
+        countQ = countQ.ilike("name", `%${query}%`);
+        dataQ = dataQ.ilike("name", `%${query}%`);
+    }
+    if (industry && industry !== "all") {
+        countQ = countQ.eq("industry", industry);
+        dataQ = dataQ.eq("industry", industry);
+    }
+    if (ownership && ownership !== "all") {
+        countQ = countQ.eq("ownership", ownership);
+        dataQ = dataQ.eq("ownership", ownership);
+    }
+
+    dataQ = dataQ.order("name", { ascending: true }).range(from, to);
+
+    const [countResult, dataResult] = await Promise.all([countQ, dataQ]);
+
+    if (countResult.error) {
+        console.error("Error counting companies:", countResult.error);
+    }
+    if (dataResult.error) {
+        console.error("Error fetching companies page:", dataResult.error);
+        return { data: [], count: 0 };
+    }
+
+    return {
+        data: dataResult.data as Company[],
+        count: countResult.count ?? 0,
+    };
+}
+
+
 export async function getStats() {
     const { data, error } = await supabase.from("companies").select("status, industry");
 
