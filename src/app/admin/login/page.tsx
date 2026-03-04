@@ -21,7 +21,10 @@ export default function AdminLoginPage() {
         // Mock login — in production, this would use Supabase Auth
         await new Promise((r) => setTimeout(r, 1000));
 
-        if (email === "admin@temukarir.com" && password === "Temukarir888") {
+        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+        const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+
+        if (email === adminEmail && password === adminPassword) {
             localStorage.setItem("tk_admin", "true");
             toast.success("Login berhasil!");
             router.push("/admin/dashboard");
