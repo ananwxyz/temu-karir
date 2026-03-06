@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, SlidersHorizontal, ExternalLink } from "lucide-react";
+import { Search, SlidersHorizontal, ExternalLink, PenLine, Plus } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -85,6 +85,20 @@ export function FreelanceSearchBar({
                             ))}
                         </SelectContent>
                     </Select>
+
+                    <Button asChild className="w-full sm:w-auto">
+                        <Link href="/koreksi">
+                            <PenLine className="mr-2 h-4 w-4" />
+                            Ajukan Koreksi
+                        </Link>
+                    </Button>
+
+                    <Button asChild className="w-full sm:w-auto">
+                        <Link href="/submit">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Ajukan Platform
+                        </Link>
+                    </Button>
                 </div>
 
                 <p className="text-sm text-muted-foreground whitespace-nowrap hidden md:block">
