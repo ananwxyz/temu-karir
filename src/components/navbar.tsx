@@ -59,7 +59,7 @@ export function Navbar() {
                             className="border-primary/30 text-primary hover:bg-primary/10"
                         >
                             <a
-                                href="https://kitabisa.com"
+                                href="https://inh-or-id.myr.id/donate/hangatkan-gaza"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
@@ -118,7 +118,7 @@ export function Navbar() {
                                 className="w-full border-primary/30 text-primary hover:bg-primary/10"
                             >
                                 <a
-                                    href="https://kitabisa.com"
+                                    href="https://inh-or-id.myr.id/donate/hangatkan-gaza"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
