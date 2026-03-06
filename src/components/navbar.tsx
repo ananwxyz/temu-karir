@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
-import { Menu, X, Heart, Plus } from "lucide-react";
+import { Menu, X, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Navbar() {
@@ -63,7 +63,7 @@ export function Navbar() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <Heart className="mr-1.5 h-3.5 w-3.5" />
+                                <span className="mr-1.5 text-sm leading-none">🇵🇸</span>
                                 Donasi
                             </a>
                         </Button>
@@ -122,7 +122,7 @@ export function Navbar() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    <Heart className="mr-1.5 h-3.5 w-3.5" />
+                                    <span className="mr-1.5 text-sm leading-none">🇵🇸</span>
                                     Donasi
                                 </a>
                             </Button>

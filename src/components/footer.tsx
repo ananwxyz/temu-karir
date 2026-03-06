@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Heart, Github, Mail } from "lucide-react";
+import { Github, Mail } from "lucide-react";
 
 export function Footer() {
     return (
@@ -70,7 +70,7 @@ export function Footer() {
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-2 text-xs font-medium text-primary hover:bg-primary/20 transition-colors"
                             >
-                                <Heart className="h-3.5 w-3.5" />
+                                <span className="text-sm leading-none">🇵🇸</span>
                                 Donasi
                             </a>
                             <a
