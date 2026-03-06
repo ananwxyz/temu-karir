@@ -18,18 +18,24 @@ export default function AdminLoginPage() {
         e.preventDefault();
         setLoading(true);
 
-        // Mock login — in production, this would use Supabase Auth
-        await new Promise((r) => setTimeout(r, 1000));
+        try {
+            const res = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
 
-        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-        const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+            const data = await res.json();
 
-        if (email === adminEmail && password === adminPassword) {
-            localStorage.setItem("tk_admin", "true");
-            toast.success("Login berhasil!");
-            router.push("/admin/dashboard");
-        } else {
-            toast.error("Email atau password salah");
+            if (data.success) {
+                localStorage.setItem("tk_admin", "true");
+                toast.success("Login berhasil!");
+                router.push("/admin/dashboard");
+            } else {
+                toast.error(data.message || "Email atau password salah");
+            }
+        } catch {
+            toast.error("Gagal terhubung ke server");
         }
 
         setLoading(false);
