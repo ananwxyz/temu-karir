@@ -90,7 +90,7 @@ export function FreelanceGrid() {
                     </div>
                 ) : platforms.length > 0 ? (
                     <>
-                        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {platforms.map((platform, i) => (
                                 <div
                                     key={platform.id}
