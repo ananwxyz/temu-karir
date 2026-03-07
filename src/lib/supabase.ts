@@ -121,20 +121,22 @@ export async function searchCompaniesPaginated(
 
 
 export async function getStats() {
-    const { data, error } = await supabase.from("companies").select("status, industry");
+    const [totalRes, activeRes, flaggedRes, pendingRes, indRes] = await Promise.all([
+        supabase.from("companies").select("*", { count: "exact", head: true }).neq("status", "PENDING"),
+        supabase.from("companies").select("*", { count: "exact", head: true }).eq("status", "ACTIVE"),
+        supabase.from("companies").select("*", { count: "exact", head: true }).eq("status", "FLAGGED"),
+        supabase.from("companies").select("*", { count: "exact", head: true }).eq("status", "PENDING"),
+        supabase.from("companies").select("industry") // This might still limit to 1000 distinct industries but it's fine for now as there aren't many
+    ]);
 
-    if (error) {
-        console.error("Error fetching stats:", error);
-        return { total: 0, active: 0, flagged: 0, pending: 0, industries: 0 };
-    }
+    const industriesData = indRes.data || [];
 
-    const companies = data || [];
     return {
-        total: companies.filter((c) => c.status !== "PENDING").length,
-        active: companies.filter((c) => c.status === "ACTIVE").length,
-        flagged: companies.filter((c) => c.status === "FLAGGED").length,
-        pending: companies.filter((c) => c.status === "PENDING").length,
-        industries: [...new Set(companies.map((c) => c.industry))].length,
+        total: totalRes.count || 0,
+        active: activeRes.count || 0,
+        flagged: flaggedRes.count || 0,
+        pending: pendingRes.count || 0,
+        industries: [...new Set(industriesData.map((c) => c.industry))].length,
     };
 }
 
