@@ -166,8 +166,8 @@ export function CompanyCard({ company }: CompanyCardProps) {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
-                        <span className="hidden sm:inline">Halaman Karir</span>
-                        <span className="sm:hidden">Karir</span>
+                        <span className="hidden sm:inline">Web</span>
+                        <span className="sm:hidden">Web</span>
                     </a>
                 </Button>
             </div>

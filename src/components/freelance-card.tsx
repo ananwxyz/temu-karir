@@ -68,8 +68,8 @@ export function FreelanceCard({ platform }: FreelanceCardProps) {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
-                        <span className="hidden sm:inline">Kunjungi</span>
-                        <span className="sm:hidden">Kunjungi</span>
+                        <span className="hidden sm:inline">Web</span>
+                        <span className="sm:hidden">Web</span>
                     </a>
                 </Button>
             </div>

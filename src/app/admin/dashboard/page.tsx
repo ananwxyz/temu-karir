@@ -580,7 +580,7 @@ export default function AdminDashboard() {
                                                     rel="noopener noreferrer"
                                                     className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1"
                                                 >
-                                                    Halaman Karir
+                                                    Web
                                                     <ExternalLink className="h-2.5 w-2.5" />
                                                 </a>
                                             </div>
