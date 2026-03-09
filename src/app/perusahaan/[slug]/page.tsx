@@ -51,11 +51,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (!company) return { title: "Perusahaan Tidak Ditemukan" };
 
     return {
-        title: `${company.name} — Halaman Karir Resmi`,
-        description: `Kunjungi halaman karir resmi ${company.name} dan lamar langsung. ${company.industry} - ${company.ownership}.`,
+        title: `Lowongan Kerja & Halaman Karir Resmi ${company.name}`,
+        description: `Info loker dan lowongan kerja terbaru di ${company.name}. Kunjungi halaman karir resmi ${company.name} dan lamar langsung secara online. ${company.industry} - ${company.ownership}.`,
         openGraph: {
-            title: `${company.name} — Halaman Karir Resmi | Temu Karir`,
-            description: `Halaman karir resmi ${company.name}. ${company.industry} - ${company.ownership}.`,
+            title: `Lowongan Kerja & karir ${company.name} | Temu Karir`,
+            description: `Info loker resmi ${company.name}. Silakan kunjungi halaman karirnya untuk melamar pekerjaan. ${company.industry} - ${company.ownership}.`,
             url: `https://temukarir.com/perusahaan/${company.slug}`,
         },
     };
@@ -290,6 +290,10 @@ export default async function CompanyDetailPage({ params }: PageProps) {
                             "@type": "Organization",
                             name: company.name,
                             url: company.career_url,
+                            sameAs: [
+                                company.linkedin_url,
+                                company.instagram_url
+                            ].filter(Boolean),
                             ...(company.email && { email: company.email }),
                         }),
                     }}

@@ -67,6 +67,8 @@ export function CompanyCard({ company }: CompanyCardProps) {
                     <Link
                         href={`/perusahaan/${company.slug}`}
                         className="font-semibold text-foreground hover:text-primary transition-colors truncate"
+                        title={`Lihat lowongan kerja resmi di ${company.name}`}
+                        aria-label={`Lihat informasi karir resmi untuk ${company.name}`}
                     >
                         {company.name}
                     </Link>
@@ -110,7 +112,8 @@ export function CompanyCard({ company }: CompanyCardProps) {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            title="LinkedIn"
+                            title={`LinkedIn ${company.name}`}
+                            aria-label={`Buka halaman LinkedIn resmi ${company.name}`}
                         >
                             <Linkedin className="h-3.5 w-3.5" />
                         </a>
@@ -138,7 +141,8 @@ export function CompanyCard({ company }: CompanyCardProps) {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            title="Instagram"
+                            title={`Instagram ${company.name}`}
+                            aria-label={`Buka halaman Instagram resmi ${company.name}`}
                         >
                             <Instagram className="h-3.5 w-3.5" />
                         </a>
@@ -164,6 +168,8 @@ export function CompanyCard({ company }: CompanyCardProps) {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
+                        title={`Kunjungi ${company.career_url}`}
+                        aria-label={`Buka halaman web karir resmi ${company.name}`}
                     >
                         <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
                         <span className="hidden sm:inline">Web</span>
