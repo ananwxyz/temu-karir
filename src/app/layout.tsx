@@ -15,11 +15,11 @@ const baseUrl = "https://temukarir.com";
 
 export const metadata: Metadata = {
   title: {
-    default: "Temu Karir — Direktori Halaman Karir Resmi Perusahaan Indonesia",
+    default: "Temu Karir — Website Kumpulan Karir Perusahaan Indonesia",
     template: "%s | Temu Karir",
   },
   description:
-    "Temukan halaman karir resmi dari ratusan perusahaan terpercaya di Indonesia. Lamar langsung ke sumber resmi, aman dan terverifikasi. Cari lowongan kerja di Tokopedia, Gojek, BCA, Telkom, dan ratusan perusahaan lainnya.",
+    "Temukan halaman karir resmi dari ratusan perusahaan terpercaya di Indonesia. Website kumpulan karir perusahaan terlengkap. Lamar langsung ke sumber resmi, aman dan terverifikasi.",
   keywords: [
     "lowongan kerja",
     "karir",
@@ -41,8 +41,10 @@ export const metadata: Metadata = {
     "situs lowongan kerja",
     "portal lowongan kerja",
     "cari loker",
-    "karir bumn",
     "karir startup",
+    "website kumpulan karir perusahaan",
+    "kumpulan karir perusahaan",
+    "daftar karir perusahaan",
   ],
   authors: [{ name: "Temu Karir" }],
   creator: "Temu Karir",
@@ -51,9 +53,9 @@ export const metadata: Metadata = {
     canonical: baseUrl,
   },
   openGraph: {
-    title: "Temu Karir — Direktori Halaman Karir Resmi Perusahaan Indonesia",
+    title: "Temu Karir — Website Kumpulan Karir Perusahaan Indonesia",
     description:
-      "Temukan halaman karir resmi dari ratusan perusahaan terpercaya di Indonesia. Lamar langsung ke sumber resmi.",
+      "Temukan halaman karir resmi dari ratusan perusahaan terpercaya di Indonesia. Lamar langsung ke sumber resmi melalui website kumpulan karir perusahaan terbaik.",
     url: baseUrl,
     siteName: "Temu Karir",
     locale: "id_ID",
@@ -69,9 +71,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Temu Karir — Direktori Halaman Karir Resmi",
+    title: "Temu Karir — Website Kumpulan Karir Perusahaan",
     description:
-      "Temukan halaman karir resmi dari ratusan perusahaan terpercaya di Indonesia.",
+      "Website kumpulan karir perusahaan terlengkap. Temukan halaman karir resmi dari ratusan perusahaan terpercaya di Indonesia.",
     images: [`${baseUrl}/logo.png`],
   },
   robots: {
@@ -99,7 +101,7 @@ const jsonLd = {
       url: baseUrl,
       name: "Temu Karir",
       description:
-        "Direktori halaman karir resmi perusahaan Indonesia. Temukan lowongan kerja langsung dari sumber resmi.",
+        "Website kumpulan karir perusahaan Indonesia. Temukan lowongan kerja langsung dari sumber resmi tanpa perantara.",
       inLanguage: "id-ID",
       potentialAction: {
         "@type": "SearchAction",
@@ -120,7 +122,7 @@ const jsonLd = {
         url: `${baseUrl}/logo.png`,
       },
       description:
-        "Platform direktori halaman karir resmi perusahaan-perusahaan Indonesia.",
+        "Website kumpulan karir perusahaan-perusahaan terkemuka di Indonesia.",
       sameAs: [],
     },
   ],
