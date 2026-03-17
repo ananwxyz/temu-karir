@@ -69,7 +69,7 @@ export function Hero() {
                     </h1>
 
                     {/* Subtitle */}
-                    <p className="animate-fade-in-up opacity-0 stagger-2 mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-inter">
+                    <p className="animate-fade-in-up opacity-0 stagger-2 mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                         Website kumpulan karir perusahaan terpercaya. Akses langsung ke{" "}
                         <span className="font-semibold text-foreground">
                             {stats.total}+ perusahaan

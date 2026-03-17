@@ -3,9 +3,7 @@
 
 @theme {
   --color-primary: oklch(0.65 0.20 166);
-  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-outfit), sans-serif;
-  --font-inter: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
