@@ -61,7 +61,7 @@ export function Hero() {
 
                     {/* Title */}
                     <h1 
-                        className="animate-fade-in-up opacity-0 stagger-1 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight font-heading"
+                        className="animate-fade-in-up opacity-0 stagger-1 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight"
                     >
                         Temukan{" "}
                         <span className="gradient-text">Halaman Karir</span>{" "}
@@ -69,7 +69,7 @@ export function Hero() {
                     </h1>
 
                     {/* Subtitle */}
-                    <p className="animate-fade-in-up opacity-0 stagger-2 mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                    <p className="animate-fade-in-up opacity-0 stagger-2 mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-inter">
                         Website kumpulan karir perusahaan terpercaya. Akses langsung ke{" "}
                         <span className="font-semibold text-foreground">
                             {stats.total}+ perusahaan

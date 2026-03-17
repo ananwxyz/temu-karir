@@ -94,7 +94,7 @@ export function CompanyGrid() {
         <section id="direktori" className="py-16 sm:py-20">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-10">
-                    <h2 className="text-3xl font-bold text-foreground mb-3 font-heading">
+                    <h2 className="text-3xl font-bold text-foreground mb-3">
                         Direktori Perusahaan
                     </h2>
                     <p className="text-muted-foreground max-w-2xl mx-auto">
