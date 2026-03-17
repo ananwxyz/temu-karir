@@ -60,7 +60,10 @@ export function Hero() {
                     </div>
 
                     {/* Title */}
-                    <h1 className="animate-fade-in-up opacity-0 stagger-1 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight">
+                    <h1 
+                        className="animate-fade-in-up opacity-0 stagger-1 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight"
+                        style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
+                    >
                         Temukan{" "}
                         <span className="gradient-text">Halaman Karir</span>{" "}
                         Resmi Perusahaan Indonesia
@@ -80,7 +83,7 @@ export function Hero() {
                         <Button
                             asChild
                             size="lg"
-                            className="h-13 px-8 text-base rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
+                            className="h-13 px-8 text-base rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all font-medium"
                         >
                             <Link href="/#direktori">
                                 <Search className="mr-2 h-5 w-5" />
@@ -91,7 +94,7 @@ export function Hero() {
                             asChild
                             variant="outline"
                             size="lg"
-                            className="h-13 px-8 text-base rounded-xl border-border/50 hover:bg-accent"
+                            className="h-13 px-8 text-base rounded-xl border-border/50 hover:bg-accent glass"
                         >
                             <Link href="/#tentang">
                                 Pelajari Lebih Lanjut
@@ -195,7 +198,7 @@ function StatItem({
     label: string;
 }) {
     return (
-        <div className="rounded-xl border bg-card/50 p-4 text-center card-hover">
+        <div className="rounded-xl border glass p-4 text-center card-hover">
             <div className="flex items-center justify-center mb-2 text-primary">
                 {icon}
             </div>

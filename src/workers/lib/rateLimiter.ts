@@ -69,14 +69,16 @@ export async function processConcurrently<T, R>(
     fn: (item: T) => Promise<R>,
     concurrency = 5
 ): Promise<R[]> {
-    const results: R[] = [];
-    const queue = [...items];
+    const results: R[] = new Array(items.length);
+    let currentIndex = 0;
 
     async function worker() {
-        while (queue.length > 0) {
-            const item = queue.shift()!;
-            const result = await fn(item);
-            results.push(result);
+        while (currentIndex < items.length) {
+            const index = currentIndex++;
+            if (index >= items.length) break;
+            
+            const item = items[index];
+            results[index] = await fn(item);
         }
     }
 

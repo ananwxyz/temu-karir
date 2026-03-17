@@ -23,14 +23,19 @@ export interface CronResult {
 /**
  * Run the daily re-check cron job
  */
-export async function runRecheck(concurrency = 5): Promise<CronResult> {
-    console.log("[cron] Starting daily re-check...");
+export async function runRecheck(
+    concurrency = 2,
+    limit = 5
+): Promise<CronResult> {
+    console.log(`[cron] Starting re-check (limit=${limit}, concurrency=${concurrency})...`);
 
-    // Fetch all records with a discovered URL
+    // Fetch records with a discovered URL, processing those checked least recently first
     const { data: records, error } = await supabase
         .from("career_discovery")
         .select("id, domain, discovered_url, fail_count")
-        .not("discovered_url", "is", null);
+        .not("discovered_url", "is", null)
+        .order("last_checked", { ascending: true, nullsFirst: true })
+        .limit(limit);
 
     if (error || !records) {
         console.error("[cron] Failed to fetch records:", error);

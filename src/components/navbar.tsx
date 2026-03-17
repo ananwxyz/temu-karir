@@ -5,15 +5,17 @@ import { useState } from "react";
 import Image from "next/image";
 import { Menu, X, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Navbar() {
+// ... existing state ...
     const [isOpen, setIsOpen] = useState(false);
 
     return (
         <nav className="glass sticky top-0 z-50 border-b">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
-                    {/* Logo */}
+                    {/* Logo ... */}
                     <Link href="/" className="flex items-center gap-2 group">
                         <Image
                             src="/logo.png"
@@ -67,16 +69,22 @@ export function Navbar() {
                                 Donasi
                             </a>
                         </Button>
+                        <div className="border-l pl-6">
+                            <ThemeToggle />
+                        </div>
                     </div>
 
                     {/* Mobile menu button */}
-                    <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden rounded-lg p-2 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-                        aria-label="Toggle menu"
-                    >
-                        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                    </button>
+                    <div className="flex items-center gap-2 md:hidden">
+                        <ThemeToggle />
+                        <button
+                            onClick={() => setIsOpen(!isOpen)}
+                            className="rounded-lg p-2 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                            aria-label="Toggle menu"
+                        >
+                            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Mobile Nav */}

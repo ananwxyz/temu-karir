@@ -38,8 +38,9 @@ export async function POST(request: NextRequest) {
 
         // Re-check mode
         if (body.action === "recheck") {
-            const concurrency = body.concurrency || 5;
-            const result = await runRecheck(concurrency);
+            const concurrency = body.concurrency || 2;
+            const limit = body.limit || 5;
+            const result = await runRecheck(concurrency, limit);
             return NextResponse.json({ success: true, result });
         }
 
@@ -56,8 +57,8 @@ export async function POST(request: NextRequest) {
 
         // Batch domains
         if (body.domains && Array.isArray(body.domains)) {
-            const domains: string[] = body.domains.slice(0, 1000); // Max 1000
-            const concurrency = body.concurrency || 5;
+            const domains: string[] = body.domains.slice(0, 20); // Reduced to 20 for Free Plan
+            const concurrency = body.concurrency || 2;
 
             const results = await processConcurrently(
                 domains,

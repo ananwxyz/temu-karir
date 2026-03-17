@@ -60,7 +60,7 @@ function formatDate(dateStr: string | null): string {
 
 export function CompanyCard({ company }: CompanyCardProps) {
     return (
-        <div className="card-hover rounded-xl border bg-card px-5 py-4 flex items-center gap-4">
+        <div className="card-hover rounded-xl border glass px-5 py-4 flex items-center gap-4">
             {/* Info */}
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -90,8 +90,10 @@ export function CompanyCard({ company }: CompanyCardProps) {
                         </Badge>
                     )}
                 </div>
-                <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
+                <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground">
                     <span>{getIndustryEmoji(company.industry)} {company.industry}</span>
+                </div>
+                <div className="mt-2">
                     <Badge variant="outline" className="text-[10px] px-1.5 py-0 font-normal">
                         {company.ownership}
                     </Badge>
