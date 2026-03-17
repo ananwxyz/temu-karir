@@ -61,8 +61,7 @@ export function Hero() {
 
                     {/* Title */}
                     <h1 
-                        className="animate-fade-in-up opacity-0 stagger-1 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight"
-                        style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
+                        className="animate-fade-in-up opacity-0 stagger-1 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight font-heading"
                     >
                         Temukan{" "}
                         <span className="gradient-text">Halaman Karir</span>{" "}

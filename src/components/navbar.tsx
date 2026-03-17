@@ -24,7 +24,7 @@ export function Navbar() {
                             height={36}
                             className="rounded-lg transition-transform group-hover:scale-105"
                         />
-                        <span className="text-xl font-bold gradient-text">Temu Karir</span>
+                        <span className="text-xl font-bold gradient-text font-heading">Temu Karir</span>
                     </Link>
 
                     {/* Desktop Nav */}
