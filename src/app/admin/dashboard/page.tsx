@@ -7,7 +7,6 @@ import {
     Building2,
     Briefcase,
     CheckCircle2,
-    AlertTriangle,
     Plus,
     Pencil,
     Trash2,
@@ -119,7 +118,6 @@ export default function AdminDashboard() {
     const stats = {
         total: companies.length,
         active: companies.filter((c) => c.status === "ACTIVE").length,
-        flagged: companies.filter((c) => c.status === "FLAGGED").length,
         pending: pendingCompanies.length,
     };
 
@@ -335,7 +333,7 @@ export default function AdminDashboard() {
 
             <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 space-y-6">
                 {/* Stats */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     <div className="rounded-xl border bg-card p-5">
                         <div className="flex items-center gap-3">
                             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -360,17 +358,6 @@ export default function AdminDashboard() {
                     </div>
                     <div className="rounded-xl border bg-card p-5">
                         <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                                <AlertTriangle className="h-5 w-5 text-amber-500" />
-                            </div>
-                            <div>
-                                <p className="text-2xl font-bold text-foreground">{stats.flagged}</p>
-                                <p className="text-xs text-muted-foreground">Flagged</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="rounded-xl border bg-card p-5">
-                        <div className="flex items-center gap-3">
                             <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
                                 <Clock className="h-5 w-5 text-blue-500" />
                             </div>
@@ -382,28 +369,7 @@ export default function AdminDashboard() {
                     </div>
                 </div>
 
-                {/* Flagged Alert */}
-                {stats.flagged > 0 && (
-                    <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 flex items-center gap-3">
-                        <AlertTriangle className="h-5 w-5 text-amber-500 shrink-0" />
-                        <div className="flex-1">
-                            <p className="text-sm font-medium text-amber-700 dark:text-amber-400">
-                                {stats.flagged} perusahaan memerlukan tinjauan
-                            </p>
-                            <p className="text-xs text-amber-600/80 dark:text-amber-400/60">
-                                Data ini ditandai karena validasi otomatis gagal. Periksa dan perbarui URL karir.
-                            </p>
-                        </div>
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            className="border-amber-500/30 text-amber-700 dark:text-amber-400 hover:bg-amber-500/10 shrink-0"
-                            onClick={() => setFilterStatus("FLAGGED")}
-                        >
-                            Lihat
-                        </Button>
-                    </div>
-                )}
+
 
                 {/* Pending Submissions */}
                 {pendingCompanies.length > 0 && (
@@ -515,7 +481,6 @@ export default function AdminDashboard() {
                             <SelectContent>
                                 <SelectItem value="all">Semua Status</SelectItem>
                                 <SelectItem value="ACTIVE">Aktif</SelectItem>
-                                <SelectItem value="FLAGGED">Flagged</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
@@ -595,15 +560,9 @@ export default function AdminDashboard() {
                                         </Badge>
                                     </TableCell>
                                     <TableCell>
-                                        {company.status === "ACTIVE" ? (
-                                            <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 text-xs">
-                                                Aktif
-                                            </Badge>
-                                        ) : (
-                                            <Badge variant="outline" className="text-amber-600 border-amber-400 dark:text-amber-400 text-xs">
-                                                Flagged
-                                            </Badge>
-                                        )}
+                                        <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 text-xs">
+                                            Aktif
+                                        </Badge>
                                     </TableCell>
                                     <TableCell className="text-sm text-muted-foreground">
                                         {company.last_verified_at

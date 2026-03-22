@@ -9,7 +9,6 @@ import {
     MessageCircle,
     Instagram,
     CheckCircle2,
-    AlertTriangle,
     Shield,
     Calendar,
     Building2,
@@ -145,12 +144,7 @@ export default async function CompanyDetailPage({ params }: PageProps) {
                                         <Clock className="h-3 w-3 mr-1" />
                                         Menunggu Verifikasi
                                     </Badge>
-                                ) : (
-                                    <Badge variant="outline" className="text-amber-600 border-amber-400 dark:text-amber-400">
-                                        <AlertTriangle className="h-3 w-3 mr-1" />
-                                        Perlu Tinjauan
-                                    </Badge>
-                                )}
+                                ) : null}
                             </div>
 
                             <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground flex-wrap">

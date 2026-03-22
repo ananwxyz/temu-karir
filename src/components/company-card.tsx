@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {
     CheckCircle2,
-    AlertTriangle,
     ExternalLink,
     Linkedin,
     Instagram,
@@ -72,21 +71,13 @@ export function CompanyCard({ company }: CompanyCardProps) {
                     >
                         {company.name}
                     </Link>
-                    {company.status === "PENDING" ? (
+                    {company.status === "PENDING" && (
                         <Badge
                             variant="outline"
                             className="text-blue-600 border-blue-300 dark:text-blue-400 dark:border-blue-600 text-[10px] px-1.5 py-0 shrink-0"
                         >
                             <Clock className="h-2.5 w-2.5 mr-0.5" />
                             Menunggu
-                        </Badge>
-                    ) : company.status === "ACTIVE" ? null : (
-                        <Badge
-                            variant="outline"
-                            className="text-amber-600 border-amber-300 dark:text-amber-400 dark:border-amber-600 text-[10px] px-1.5 py-0 shrink-0"
-                        >
-                            <AlertTriangle className="h-2.5 w-2.5 mr-0.5" />
-                            Perlu Tinjauan
                         </Badge>
                     )}
                 </div>
