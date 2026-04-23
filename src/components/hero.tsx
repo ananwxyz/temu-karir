@@ -31,21 +31,19 @@ export function Hero() {
     }, []);
 
     return (
-        <section className="relative overflow-hidden">
-            {/* Background */}
-            <div className="absolute inset-0 hero-gradient" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,oklch(0.64_0.18_166_/_0.05),transparent_70%)]" />
-
-            {/* Grid pattern */}
-            <div
-                className="absolute inset-0 opacity-[0.03]"
-                style={{
-                    backgroundImage: `linear-gradient(oklch(0.64 0.18 166) 1px, transparent 1px), linear-gradient(90deg, oklch(0.64 0.18 166) 1px, transparent 1px)`,
-                    backgroundSize: '60px 60px',
-                }}
+        <section className="relative overflow-hidden bg-background">
+            {/* Background Photo */}
+            <div 
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: "url('/hero-bg.png')" }}
             />
+            
+            {/* Dark Overlays */}
+            <div className="absolute inset-0 bg-zinc-950/80 lg:bg-transparent lg:bg-gradient-to-r lg:from-zinc-950/95 lg:via-zinc-950/80 lg:to-zinc-950/30" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
 
-            <div className="relative mx-auto max-w-7xl px-4 py-20 sm:py-28 lg:py-36 sm:px-6 lg:px-8">
+            <div className="dark">
+                <div className="relative mx-auto max-w-7xl px-4 py-20 sm:py-28 lg:py-36 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                     {/* Left Column - Hero Content */}
                     <div className="text-center lg:text-left">
@@ -119,6 +117,7 @@ export function Hero() {
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </section>
     );
