@@ -43,7 +43,7 @@ export function Hero() {
             <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
 
             <div className="dark">
-                <div className="relative mx-auto max-w-7xl px-4 py-20 sm:py-28 lg:py-36 sm:px-6 lg:px-8">
+                <div className="relative mx-auto max-w-7xl px-4 py-12 sm:py-20 lg:py-28 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                     {/* Left Column - Hero Content */}
                     <div className="text-center lg:text-left">
