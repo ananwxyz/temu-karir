@@ -31,7 +31,7 @@ export function Hero() {
     }, []);
 
     return (
-        <section className="relative overflow-hidden bg-background">
+        <section className="relative overflow-hidden -mt-16 pt-16">
             {/* Background Photo */}
             <div 
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -55,7 +55,7 @@ export function Hero() {
 
                         {/* Title */}
                         <h1 
-                            className="animate-fade-in-up opacity-0 stagger-1 text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold leading-tight tracking-tight"
+                            className="animate-fade-in-up opacity-0 stagger-1 text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold leading-tight tracking-tight text-white"
                         >
                             <span className="block">Jelajahi <span className="gradient-text">Karir</span></span>
                             <span className="block">di Perusahaan</span>
@@ -63,9 +63,9 @@ export function Hero() {
                         </h1>
 
                         {/* Subtitle */}
-                        <p className="animate-fade-in-up opacity-0 stagger-2 mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl lg:max-w-none leading-relaxed mx-auto lg:mx-0">
+                        <p className="animate-fade-in-up opacity-0 stagger-2 mt-6 text-lg sm:text-xl text-zinc-300 max-w-2xl lg:max-w-none leading-relaxed mx-auto lg:mx-0">
                             Website kumpulan karir perusahaan terpercaya. Akses langsung ke{" "}
-                            <span className="font-semibold text-foreground">
+                            <span className="font-semibold text-white">
                                 {totalPerusahaan}+ perusahaan
                             </span>{" "}
                             terkemuka. Tanpa login, tanpa biaya, langsung ke sumber resmi.
@@ -98,19 +98,19 @@ export function Hero() {
                                 <span>Tahukah Kamu?</span>
                             </div>
 
-                            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4 leading-tight">
+                            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 leading-tight">
                                 Sebagian besar rekruter sebenarnya lebih menyukai kandidat yang melamar langsung melalui website karir resmi perusahaan.
                             </h2>
 
-                            <p className="text-muted-foreground text-sm sm:text-base mb-4 leading-relaxed">
+                            <p className="text-zinc-300 text-sm sm:text-base mb-4 leading-relaxed">
                                 Mengapa? Karena itu menunjukkan inisiatif, dan data kandidat langsung masuk ke Applicant Tracking System (ATS) internal mereka tanpa perantara platform pihak ketiga. Banyak juga loker &quot;hidden gem&quot; yang hanya diposting di website resmi mereka!
                             </p>
 
-                            <p className="text-muted-foreground text-sm sm:text-base mb-6 leading-relaxed">
+                            <p className="text-zinc-300 text-sm sm:text-base mb-6 leading-relaxed">
                                 TAPI, proses mencari halaman karir tiap perusahaan ini seringkali melelahkan. Harus buka Google, cek website resminya satu-satu (yang kadang UI-nya muter-muter), sampai akhirnya nemu tombol &quot;Career&quot; yang nyempil di pojokan. Waktu nyari kerja malah habis buat navigasi web. 😩
                             </p>
 
-                            <div className="inline-flex items-center gap-2 font-medium text-foreground bg-background/50 backdrop-blur-sm px-4 py-3 rounded-lg border">
+                            <div className="inline-flex items-center gap-2 font-medium text-white bg-white/10 backdrop-blur-sm px-4 py-3 rounded-lg border border-white/20">
                                 <span className="text-xl">💡</span>
                                 <span>Pakai ini aja biar hemat waktu: <span className="text-primary font-bold">temukarir.com</span></span>
                             </div>
