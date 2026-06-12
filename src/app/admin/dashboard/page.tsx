@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
     Building2,
-    Briefcase,
     CheckCircle2,
     Plus,
     Pencil,
@@ -486,12 +485,6 @@ export default function AdminDashboard() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <Button asChild variant="outline" className="rounded-lg">
-                            <Link href="/admin/freelance">
-                                <Briefcase className="mr-1.5 h-4 w-4" />
-                                Admin Freelance
-                            </Link>
-                        </Button>
                         <Button asChild variant="outline" className="rounded-lg">
                             <Link href="/admin/discovery">
                                 <Globe className="mr-1.5 h-4 w-4" />
