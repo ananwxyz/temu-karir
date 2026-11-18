@@ -9,6 +9,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Company } from "@/lib/types";
+import { isSafeExternalUrl } from "@/lib/utils";
 
 interface CompanyCardProps {
     company: Company;
@@ -64,7 +65,7 @@ export function CompanyCard({ company }: CompanyCardProps) {
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                     <Link
-                        href={`/perusahaan/${company.slug}`}
+                        href={`/company/${company.slug}`}
                         className="font-semibold text-foreground hover:text-primary transition-colors truncate"
                         title={`Lihat lowongan kerja resmi di ${company.name}`}
                         aria-label={`Lihat informasi karir resmi untuk ${company.name}`}
@@ -93,7 +94,7 @@ export function CompanyCard({ company }: CompanyCardProps) {
 
             {/* Action Buttons */}
             <div className="flex items-center gap-1.5 shrink-0">
-                {company.linkedin_url ? (
+                {isSafeExternalUrl(company.linkedin_url) ? (
                     <Button
                         asChild
                         variant="outline"
@@ -101,7 +102,7 @@ export function CompanyCard({ company }: CompanyCardProps) {
                         className="h-8 w-8 p-0 rounded-lg border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950"
                     >
                         <a
-                            href={company.linkedin_url}
+                            href={company.linkedin_url ?? "#"}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
@@ -118,11 +119,12 @@ export function CompanyCard({ company }: CompanyCardProps) {
                         disabled
                         className="h-8 w-8 p-0 rounded-lg"
                         title="LinkedIn belum tersedia"
+                        aria-label="LinkedIn belum tersedia"
                     >
                         <Linkedin className="h-3.5 w-3.5" />
                     </Button>
                 )}
-                {company.instagram_url ? (
+                {isSafeExternalUrl(company.instagram_url) ? (
                     <Button
                         asChild
                         variant="outline"
@@ -130,7 +132,7 @@ export function CompanyCard({ company }: CompanyCardProps) {
                         className="h-8 w-8 p-0 rounded-lg border-pink-200 dark:border-pink-800 text-pink-600 dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-950"
                     >
                         <a
-                            href={company.instagram_url}
+                            href={company.instagram_url ?? "#"}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
@@ -147,28 +149,31 @@ export function CompanyCard({ company }: CompanyCardProps) {
                         disabled
                         className="h-8 w-8 p-0 rounded-lg"
                         title="Instagram belum tersedia"
+                        aria-label="Instagram belum tersedia"
                     >
                         <Instagram className="h-3.5 w-3.5" />
                     </Button>
                 )}
-                <Button
-                    asChild
-                    size="sm"
-                    className="rounded-lg shrink-0 shadow-sm shadow-primary/10 hover:shadow-primary/20 transition-all"
-                >
-                    <a
-                        href={company.career_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        title={`Kunjungi ${company.career_url}`}
-                        aria-label={`Buka halaman web karir resmi ${company.name}`}
+                {isSafeExternalUrl(company.career_url) && (
+                    <Button
+                        asChild
+                        size="sm"
+                        className="rounded-lg shrink-0 shadow-sm shadow-primary/10 hover:shadow-primary/20 transition-all"
                     >
-                        <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
-                        <span className="hidden sm:inline">Web</span>
-                        <span className="sm:hidden">Web</span>
-                    </a>
-                </Button>
+                        <a
+                            href={company.career_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            title={`Kunjungi ${company.career_url}`}
+                            aria-label={`Buka halaman web karir resmi ${company.name}`}
+                        >
+                            <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                            <span className="hidden sm:inline">Web</span>
+                            <span className="sm:hidden">Web</span>
+                        </a>
+                    </Button>
+                )}
             </div>
         </div>
     );

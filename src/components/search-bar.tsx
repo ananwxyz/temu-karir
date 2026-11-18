@@ -21,6 +21,7 @@ interface SearchBarProps {
     ownership: string;
     onOwnershipChange: (ownership: string) => void;
     resultCount: number;
+    loading?: boolean;
 }
 
 export function SearchBar({
@@ -31,6 +32,7 @@ export function SearchBar({
     ownership,
     onOwnershipChange,
     resultCount,
+    loading = false,
 }: SearchBarProps) {
     return (
         <div className="space-y-4">
@@ -38,7 +40,7 @@ export function SearchBar({
                 <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                 <Input
                     type="text"
-                    placeholder="Cari perusahaan... (contoh: Tokopedia, BCA, Gojek)"
+                    placeholder="Cari perusahaan... (contoh: Tokopedia, BCA, Telkom)"
                     value={query}
                     onChange={(e) => onQueryChange(e.target.value)}
                     className="h-14 pl-12 pr-4 text-base rounded-xl border-border/50 bg-card shadow-sm focus:border-primary/50 focus:ring-primary/20"
@@ -87,7 +89,7 @@ export function SearchBar({
                     </Select>
 
                     <Button asChild className="w-full sm:w-auto">
-                        <Link href="/koreksi">
+                        <Link href="/correction">
                             <PenLine className="mr-2 h-4 w-4" />
                             Ajukan Koreksi
                         </Link>
@@ -101,9 +103,15 @@ export function SearchBar({
                     </Button>
                 </div>
 
-                <p className="text-sm text-muted-foreground whitespace-nowrap hidden md:block">
-                    <span className="font-semibold text-foreground">{resultCount}</span>{" "}
-                    perusahaan ditemukan
+                <p className="text-sm text-muted-foreground whitespace-nowrap hidden md:block" aria-live="polite">
+                    {loading ? (
+                        <span className="inline-block h-4 w-24 align-middle rounded bg-muted animate-pulse" />
+                    ) : (
+                        <>
+                            <span className="font-semibold text-foreground">{resultCount}</span>{" "}
+                            perusahaan ditemukan
+                        </>
+                    )}
                 </p>
             </div>
         </div>

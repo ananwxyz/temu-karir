@@ -20,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import { getCompanyBySlug as getFromSupabase, getCompanies as getSupabaseCompanies } from "@/lib/supabase";
 import { getCompanyBySlug as getFromMock, getCompanies as getMockCompanies } from "@/lib/data";
 import { Company } from "@/lib/types";
+import { isSafeExternalUrl } from "@/lib/utils";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -52,10 +53,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
         title: `Lowongan Kerja & Halaman Karir Resmi ${company.name}`,
         description: `Info loker dan lowongan kerja terbaru di ${company.name}. Kunjungi halaman karir resmi ${company.name} dan lamar langsung secara online. ${company.industry} - ${company.ownership}.`,
+        alternates: {
+            canonical: `https://temukarir.com/company/${company.slug}`,
+        },
         openGraph: {
             title: `Lowongan Kerja & karir ${company.name} | Temu Karir`,
             description: `Info loker resmi ${company.name}. Silakan kunjungi halaman karirnya untuk melamar pekerjaan. ${company.industry} - ${company.ownership}.`,
-            url: `https://temukarir.com/perusahaan/${company.slug}`,
+            url: `https://temukarir.com/company/${company.slug}`,
         },
     };
 }
@@ -71,7 +75,7 @@ export default async function CompanyDetailPage({ params }: PageProps) {
     const contacts = [
         {
             label: "LinkedIn",
-            value: company.linkedin_url || "#",
+            value: company.linkedin_url && isSafeExternalUrl(company.linkedin_url) ? company.linkedin_url : null,
             icon: Linkedin,
             color: "text-blue-600 dark:text-blue-400",
             bg: "bg-blue-500/10",
@@ -87,7 +91,7 @@ export default async function CompanyDetailPage({ params }: PageProps) {
         },
         {
             label: "Instagram",
-            value: company.instagram_url || "#",
+            value: company.instagram_url && isSafeExternalUrl(company.instagram_url) ? company.instagram_url : null,
             icon: Instagram,
             color: "text-pink-600 dark:text-pink-400",
             bg: "bg-pink-500/10",
@@ -178,6 +182,7 @@ export default async function CompanyDetailPage({ params }: PageProps) {
                         Kunjungi halaman karir resmi {company.name} untuk melihat lowongan
                         yang tersedia dan melamar secara langsung.
                     </p>
+                    {isSafeExternalUrl(company.career_url) && (
                     <Button
                         asChild
                         size="lg"
@@ -192,6 +197,7 @@ export default async function CompanyDetailPage({ params }: PageProps) {
                             Web
                         </a>
                     </Button>
+                    )}
                 </div>
 
                 {/* Contacts */}

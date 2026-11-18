@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { SearchBar } from "@/components/search-bar";
 import { CompanyCard } from "@/components/company-card";
 import { searchCompanies as mockSearch } from "@/lib/data";
@@ -16,23 +17,107 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
+const DEFAULT_PAGE_SIZE = 100;
+
+function readPage(raw: string | null): number {
+    const value = Number(raw);
+    return Number.isFinite(value) && value > 1 ? Math.floor(value) : 1;
+}
+
+function readPageSize(raw: string | null): number {
+    return Number(raw) === 200 ? 200 : DEFAULT_PAGE_SIZE;
+}
+
 export function CompanyGrid() {
-    const [query, setQuery] = useState("");
-    const [industry, setIndustry] = useState("all");
-    const [ownership, setOwnership] = useState("all");
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    // State awal dibaca dari query string supaya link bisa dibagikan
+    // dan reload mengembalikan tampilan yang sama.
+    const [query, setQuery] = useState(() => searchParams.get("q") ?? "");
+    const [industry, setIndustry] = useState(
+        () => searchParams.get("industri") ?? "all"
+    );
+    const [ownership, setOwnership] = useState(
+        () => searchParams.get("tipe") ?? "all"
+    );
+    const [currentPage, setCurrentPage] = useState(() =>
+        readPage(searchParams.get("page"))
+    );
+    const [pageSize, setPageSize] = useState(() =>
+        readPageSize(searchParams.get("per"))
+    );
 
     const [companies, setCompanies] = useState<Company[]>([]);
     const [totalCount, setTotalCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const [useSupabase, setUseSupabase] = useState(true);
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(100);
+    const urlSignature = searchParams.toString();
+    const lastWrittenSignature = useRef<string | null>(null);
 
-    // Reset page to 1 whenever filters or page size change
+    // Reset halaman ke 1 saat filter berubah — tapi jangan saat mount,
+    // agar deep link seperti ?industry=bank&page=2 tetap bekerja.
+    const filterSignature = `${query}\u0000${industry}\u0000${ownership}\u0000${pageSize}`;
+    const lastFilterSignature = useRef(filterSignature);
     useEffect(() => {
+        if (lastFilterSignature.current === filterSignature) return;
+        lastFilterSignature.current = filterSignature;
         setCurrentPage(1);
-    }, [query, industry, ownership, pageSize]);
+    }, [filterSignature]);
+
+    // URL -> state (menangani tombol Back/Forward). Dilewati kalau URL
+    // yang masuk persis hasil tulis kita sendiri.
+    useEffect(() => {
+        if (lastWrittenSignature.current === urlSignature) return;
+
+        const urlQuery = searchParams.get("q") ?? "";
+        const urlIndustry = searchParams.get("industri") ?? "all";
+        const urlOwnership = searchParams.get("tipe") ?? "all";
+        const urlPage = readPage(searchParams.get("page"));
+        const urlPageSize = readPageSize(searchParams.get("per"));
+
+        setQuery((prev) => (prev === urlQuery ? prev : urlQuery));
+        setIndustry((prev) => (prev === urlIndustry ? prev : urlIndustry));
+        setOwnership((prev) => (prev === urlOwnership ? prev : urlOwnership));
+        setCurrentPage((prev) => (prev === urlPage ? prev : urlPage));
+        setPageSize((prev) => (prev === urlPageSize ? prev : urlPageSize));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [urlSignature]);
+
+    // State -> URL, di-debounce 300 ms supaya mengetik tidak membanjiri history.
+    useEffect(() => {
+        const params = new URLSearchParams();
+        const trimmedQuery = query.trim();
+        if (trimmedQuery) params.set("q", trimmedQuery);
+        if (industry !== "all") params.set("industri", industry);
+        if (ownership !== "all") params.set("tipe", ownership);
+        if (currentPage > 1) params.set("page", String(currentPage));
+        if (pageSize !== DEFAULT_PAGE_SIZE) params.set("per", String(pageSize));
+
+        const qs = params.toString();
+        if (qs === urlSignature) return;
+
+        const timer = setTimeout(() => {
+            lastWrittenSignature.current = qs;
+            router.replace(
+                `${pathname}${qs ? `?${qs}` : ""}${window.location.hash}`,
+                { scroll: false }
+            );
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [
+        query,
+        industry,
+        ownership,
+        currentPage,
+        pageSize,
+        pathname,
+        router,
+        urlSignature,
+    ]);
 
     // Fetch paginated data from Supabase (or fallback to mock)
     useEffect(() => {
@@ -43,7 +128,7 @@ export function CompanyGrid() {
             try {
                 if (useSupabase) {
                     const { data, count } = await searchCompaniesPaginated(
-                        query,
+                        query.trim() || undefined,
                         industry,
                         ownership,
                         currentPage,
@@ -111,6 +196,7 @@ export function CompanyGrid() {
                     ownership={ownership}
                     onOwnershipChange={setOwnership}
                     resultCount={totalCount}
+                    loading={loading}
                 />
 
                 {loading ? (
@@ -140,7 +226,9 @@ export function CompanyGrid() {
                                     <Select
                                         value={pageSize.toString()}
                                         onValueChange={(val) => {
-                                            setPageSize(Number(val));
+                                            const next = readPageSize(val);
+                                            setPageSize(next);
+                                            setCurrentPage(1);
                                         }}
                                     >
                                         <SelectTrigger className="h-8 w-[70px]">
@@ -187,7 +275,7 @@ export function CompanyGrid() {
                     </>
                 ) : (
                     <div className="mt-16 text-center">
-                        <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                        <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center">
                             <Building2 className="h-8 w-8 text-muted-foreground" />
                         </div>
                         <h3 className="text-lg font-semibold text-foreground mb-2">

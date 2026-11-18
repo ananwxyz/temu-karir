@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import { Company } from "./types";
+import { Company, INDUSTRIES } from "./types";
+import { companySubmissionSchema } from "./validation";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -46,7 +47,7 @@ export async function searchCompanies(
     let q = supabase.from("companies").select("*").neq("status", "PENDING");
 
     if (query) {
-        q = q.ilike("name", `%${query}%`);
+        q = q.ilike("name", `%${escapeLike(query)}%`);
     }
     if (industry && industry !== "all") {
         q = q.eq("industry", industry);
@@ -79,7 +80,7 @@ export async function searchCompaniesPaginated(
     // Count query
     let countQ = supabase
         .from("companies")
-        .select("*", { count: "exact", head: true })
+        .select("id", { count: "exact", head: true })
         .neq("status", "PENDING");
 
     // Data query
@@ -89,8 +90,8 @@ export async function searchCompaniesPaginated(
         .neq("status", "PENDING");
 
     if (query) {
-        countQ = countQ.ilike("name", `%${query}%`);
-        dataQ = dataQ.ilike("name", `%${query}%`);
+        countQ = countQ.ilike("name", `%${escapeLike(query)}%`);
+        dataQ = dataQ.ilike("name", `%${escapeLike(query)}%`);
     }
     if (industry && industry !== "all") {
         countQ = countQ.eq("industry", industry);
@@ -119,24 +120,63 @@ export async function searchCompaniesPaginated(
     };
 }
 
+/**
+ * Escape LIKE/ILike wildcard characters so user input is matched literally.
+ * Supabase uses Postgres `ilike`; backslash must be escaped and Wildcards
+ * `%`/`_` need to be escaped with a backslash too.
+ */
+function escapeLike(input: string): string {
+    return input.replace(/[\\%_]/g, (m) => `\\${m}`);
+}
+
+/**
+ * Fetch ALL non-PENDING companies, paginating through Supabase's 1000-row
+ * default limit. Used by the sitemap (and any full-list consumer).
+ */
+export async function getAllCompaniesPaginated(
+    pageSize: number = 1000
+): Promise<Company[]> {
+    const all: Company[] = [];
+    let from = 0;
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+        const to = from + pageSize - 1;
+        const { data, error } = await supabase
+            .from("companies")
+            .select("*")
+            .neq("status", "PENDING")
+            .order("name", { ascending: true })
+            .range(from, to);
+
+        if (error) {
+            console.error("Error paginating companies:", error);
+            break;
+        }
+        if (!data || data.length === 0) break;
+        all.push(...(data as Company[]));
+        if (data.length < pageSize) break;
+        from += pageSize;
+    }
+
+    return all;
+}
+
 
 export async function getStats() {
-    const [totalRes, activeRes, flaggedRes, pendingRes, indRes] = await Promise.all([
-        supabase.from("companies").select("*", { count: "exact", head: true }).neq("status", "PENDING"),
-        supabase.from("companies").select("*", { count: "exact", head: true }).eq("status", "ACTIVE"),
-        supabase.from("companies").select("*", { count: "exact", head: true }).eq("status", "FLAGGED"),
-        supabase.from("companies").select("*", { count: "exact", head: true }).eq("status", "PENDING"),
-        supabase.from("companies").select("industry") // This might still limit to 1000 distinct industries but it's fine for now as there aren't many
+    // Public stats only (used on the homepage). Never query PENDING rows from
+    // the client/browser. Industry count uses the static list, not a full scan.
+    const [totalRes, activeRes, flaggedRes] = await Promise.all([
+        supabase.from("companies").select("id", { count: "exact", head: true }).neq("status", "PENDING"),
+        supabase.from("companies").select("id", { count: "exact", head: true }).eq("status", "ACTIVE"),
+        supabase.from("companies").select("id", { count: "exact", head: true }).eq("status", "FLAGGED"),
     ]);
-
-    const industriesData = indRes.data || [];
 
     return {
         total: totalRes.count || 0,
         active: activeRes.count || 0,
         flagged: flaggedRes.count || 0,
-        pending: pendingRes.count || 0,
-        industries: [...new Set(industriesData.map((c) => c.industry))].length,
+        industries: INDUSTRIES.length,
     };
 }
 
@@ -244,6 +284,26 @@ export async function flagCompany(id: string): Promise<boolean> {
 export async function createSubmission(
     company: Omit<Company, "id" | "created_at" | "updated_at" | "status" | "hash_signature" | "last_verified_at">
 ): Promise<Company | null> {
+    // Defense-in-depth: validate on the server/insert path even if the client
+    // validation is bypassed (e.g. from the browser console).
+    const parsed = companySubmissionSchema.safeParse({
+        name: company.name,
+        industry: company.industry,
+        ownership: company.ownership,
+        career_url: company.career_url,
+        email: company.email ?? "",
+        linkedin_url: company.linkedin_url ?? "",
+        instagram_url: company.instagram_url ?? "",
+        whatsapp: company.whatsapp ?? "",
+    });
+    if (!parsed.success) {
+        console.error(
+            "Submission validation failed:",
+            parsed.error.flatten().fieldErrors
+        );
+        return null;
+    }
+
     const cleanData: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(company)) {
         if (value === undefined || value === "") {
@@ -252,11 +312,15 @@ export async function createSubmission(
             cleanData[key] = value;
         }
     }
-    cleanData.name = company.name;
+    cleanData.name = parsed.data.name;
     cleanData.slug = company.slug;
     cleanData.industry = company.industry;
     cleanData.ownership = company.ownership;
-    cleanData.career_url = company.career_url;
+    cleanData.career_url = parsed.data.career_url;
+    cleanData.email = parsed.data.email || null;
+    cleanData.linkedin_url = parsed.data.linkedin_url || null;
+    cleanData.instagram_url = parsed.data.instagram_url || null;
+    cleanData.whatsapp = parsed.data.whatsapp || null;
     cleanData.status = "PENDING";
     cleanData.hash_signature = null;
     cleanData.last_verified_at = null;

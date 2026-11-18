@@ -36,7 +36,7 @@ export function Navbar() {
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2 group">
                         <Image
-                            src="/logo.png"
+                            src="/logo-192.png"
                             alt="Temu Karir"
                             width={36}
                             height={36}
@@ -102,7 +102,7 @@ export function Navbar() {
 
                 {/* Mobile Nav */}
                 {isOpen && (
-                    <div className={`md:hidden border-t py-4 space-y-3 animate-fade-in-up ${scrolled ? "glass" : "bg-zinc-950/90 backdrop-blur-md rounded-b-2xl border-white/10"}`}>
+                    <div className={`md:hidden border-t py-4 space-y-3 animate-fade-in-up ${scrolled ? "glass-strong" : "bg-zinc-950/[0.97] backdrop-blur-2xl rounded-b-2xl border-white/10"}`}>
                         <Link
                             href="/"
                             className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${

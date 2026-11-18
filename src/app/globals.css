@@ -18,6 +18,15 @@
   --border: oklch(0.26 0.02 240);
 }
 
+body:has([data-preview-page]) nav,
+body:has([data-preview-page]) footer {
+  display: none;
+}
+
+body:has([data-preview-page]) > div > main {
+  padding-top: 0;
+}
+
 @layer base {
   * {
     border-color: var(--border);
@@ -62,6 +71,13 @@
 .glass {
   background-color: color-mix(in srgb, var(--background), transparent 30%);
   backdrop-filter: blur(16px);
+  border: 1px solid color-mix(in srgb, var(--foreground), transparent 90%);
+}
+
+/* Panel menu mobile: hampir opak supaya judul hero tidak tembus di belakang link. */
+.glass-strong {
+  background-color: color-mix(in srgb, var(--background), transparent 4%);
+  backdrop-filter: blur(24px);
   border: 1px solid color-mix(in srgb, var(--foreground), transparent 90%);
 }
 

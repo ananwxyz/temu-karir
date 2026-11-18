@@ -12,7 +12,7 @@ import { getStats as getMockStats } from "@/lib/data";
 import { getStats as getSupabaseStats } from "@/lib/supabase";
 
 export function Hero() {
-    const [totalPerusahaan, setTotalPerusahaan] = useState(0);
+    const [totalPerusahaan, setTotalPerusahaan] = useState<number | null>(null);
 
     useEffect(() => {
         async function fetchStats() {
@@ -35,7 +35,7 @@ export function Hero() {
             {/* Background Photo */}
             <div 
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: "url('/hero-bg.png')" }}
+                style={{ backgroundImage: "image-set(url('/hero-bg.webp') type('image/webp'), url('/hero-bg.jpg') type('image/jpeg'))" }}
             />
             
             {/* Dark Overlays */}
@@ -65,9 +65,16 @@ export function Hero() {
                         {/* Subtitle */}
                         <p className="animate-fade-in-up opacity-0 stagger-2 mt-6 text-lg sm:text-xl text-zinc-300 max-w-2xl lg:max-w-none leading-relaxed mx-auto lg:mx-0">
                             Website kumpulan karir perusahaan terpercaya. Akses langsung ke{" "}
-                            <span className="font-semibold text-white">
-                                {totalPerusahaan}+ perusahaan
-                            </span>{" "}
+                            {totalPerusahaan === null ? (
+                                <span
+                                    className="inline-block h-6 w-20 align-middle rounded bg-white/15 animate-pulse"
+                                    aria-hidden="true"
+                                />
+                            ) : (
+                                <span className="font-semibold text-white">
+                                    {totalPerusahaan}+ perusahaan
+                                </span>
+                            )}{" "}
                             terkemuka. Tanpa login, tanpa biaya, langsung ke sumber resmi.
                         </p>
 
@@ -87,7 +94,7 @@ export function Hero() {
                     </div>
 
                     {/* Right Column - Fun Fact */}
-                    <div className="animate-fade-in-up opacity-0 relative overflow-hidden rounded-2xl border border-primary/20 bg-primary/5 p-8 sm:p-10 shadow-lg" style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}>
+                    <div id="tentang" className="animate-fade-in-up opacity-0 relative overflow-hidden rounded-2xl border border-primary/20 bg-primary/5 p-8 sm:p-10 shadow-lg scroll-mt-24" style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}>
                         <div className="absolute -right-10 -top-10 opacity-10">
                             <Lightbulb className="h-40 w-40 text-primary" />
                         </div>

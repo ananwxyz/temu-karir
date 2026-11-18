@@ -12,8 +12,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { INDUSTRIES, OWNERSHIP_TYPES, Industry, OwnershipType } from "@/lib/types";
+import { INDUSTRIES, OWNERSHIP_TYPES, Industry, OwnershipType, type Company } from "@/lib/types";
 import { createSubmission } from "@/lib/supabase";
+import { parseCompanySubmission } from "@/lib/validation";
+import { z } from "zod";
 
 function slugify(str: string): string {
     return str
@@ -26,14 +28,16 @@ export default function SubmitCompanyPage() {
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
+        setFieldErrors({});
 
         const formData = new FormData(e.currentTarget);
-        const name = formData.get("name") as string;
+        const name = (formData.get("name") as string).trim();
         const slug = slugify(name);
 
         const companyData = {
@@ -48,8 +52,25 @@ export default function SubmitCompanyPage() {
             instagram_url: (formData.get("instagram_url") as string) || null,
         };
 
+        // Client-side validation (shared schema with server).
+        const parsed = parseCompanySubmission(companyData);
+        if (!parsed.success) {
+            const f: Record<string, string> = {};
+            for (const issue of (parsed.error as z.ZodError).issues) {
+                const path = issue.path[0] as string;
+                if (!f[path]) f[path] = issue.message;
+            }
+            setFieldErrors(f);
+            setError("Ada data yang belum valid. Periksa kembali kolom yang ditandai.");
+            setLoading(false);
+            return;
+        }
+
         try {
-            const result = await createSubmission(companyData);
+            const result = await createSubmission({
+                ...companyData,
+                career_url: parsed.data.career_url,
+            } as Company);
             if (result) {
                 setSubmitted(true);
             } else {
@@ -147,7 +168,11 @@ export default function SubmitCompanyPage() {
                                     required
                                     placeholder="contoh: PT ABC Indonesia"
                                     className="h-10 rounded-lg text-sm"
+                                    aria-invalid={!!fieldErrors.name}
                                 />
+                                {fieldErrors.name && (
+                                    <p className="text-xs text-destructive mt-1">{fieldErrors.name}</p>
+                                )}
                             </div>
                             <div className="space-y-1.5">
                                 <Label htmlFor="career_url" className="text-xs font-medium">
@@ -160,7 +185,11 @@ export default function SubmitCompanyPage() {
                                     required
                                     placeholder="https://career.example.com"
                                     className="h-10 rounded-lg text-sm"
+                                    aria-invalid={!!fieldErrors.career_url}
                                 />
+                                {fieldErrors.career_url && (
+                                    <p className="text-xs text-destructive mt-1">{fieldErrors.career_url}</p>
+                                )}
                             </div>
                             <div className="space-y-1.5">
                                 <Label htmlFor="industry" className="text-xs font-medium">
@@ -215,7 +244,11 @@ export default function SubmitCompanyPage() {
                                         type="email"
                                         placeholder="careers@example.com"
                                         className="h-10 rounded-lg text-sm"
+                                        aria-invalid={!!fieldErrors.email}
                                     />
+                                    {fieldErrors.email && (
+                                        <p className="text-xs text-destructive mt-1">{fieldErrors.email}</p>
+                                    )}
                                 </div>
                                 <div className="space-y-1.5">
                                     <Label htmlFor="linkedin_url" className="text-xs font-medium">
@@ -227,7 +260,11 @@ export default function SubmitCompanyPage() {
                                         type="url"
                                         placeholder="https://linkedin.com/company/..."
                                         className="h-10 rounded-lg text-sm"
+                                        aria-invalid={!!fieldErrors.linkedin_url}
                                     />
+                                    {fieldErrors.linkedin_url && (
+                                        <p className="text-xs text-destructive mt-1">{fieldErrors.linkedin_url}</p>
+                                    )}
                                 </div>
                                 <div className="space-y-1.5">
                                     <Label htmlFor="whatsapp" className="text-xs font-medium">
@@ -238,7 +275,11 @@ export default function SubmitCompanyPage() {
                                         name="whatsapp"
                                         placeholder="628xxxxxxxxxx"
                                         className="h-10 rounded-lg text-sm"
+                                        aria-invalid={!!fieldErrors.whatsapp}
                                     />
+                                    {fieldErrors.whatsapp && (
+                                        <p className="text-xs text-destructive mt-1">{fieldErrors.whatsapp}</p>
+                                    )}
                                 </div>
                                 <div className="space-y-1.5">
                                     <Label htmlFor="instagram_url" className="text-xs font-medium">
@@ -250,7 +291,11 @@ export default function SubmitCompanyPage() {
                                         type="url"
                                         placeholder="https://instagram.com/..."
                                         className="h-10 rounded-lg text-sm"
+                                        aria-invalid={!!fieldErrors.instagram_url}
                                     />
+                                    {fieldErrors.instagram_url && (
+                                        <p className="text-xs text-destructive mt-1">{fieldErrors.instagram_url}</p>
+                                    )}
                                 </div>
                             </div>
                         </div>

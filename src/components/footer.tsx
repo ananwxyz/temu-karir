@@ -90,7 +90,9 @@ export function Footer() {
                     </p>
                     <div className="flex items-center gap-4">
                         <a
-                            href="#"
+                            href="https://github.com/ananwxyz/temu-karir"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-muted-foreground hover:text-foreground transition-colors"
                             aria-label="GitHub"
                         >

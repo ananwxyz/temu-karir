@@ -1,0 +1,139 @@
+{
+  "project": "Temu Karir front-end rewrite",
+  "description": "Rewrite all public and admin UI while preserving existing behavior and contracts, subject to owner-approved design and release gates.",
+  "tasks": [
+    {
+      "id": "behavior-baseline",
+      "title": "Inventory current routes and behavior",
+      "description": "Record all public and admin routes, visible actions, form fields, search and filter semantics, pagination, data sources, metadata, API calls, and current UI states. Capture the current build/check baseline and distinguish implemented behavior from mock or stub behavior.",
+      "status": "pending",
+      "priority": "P0",
+      "depends_on": [],
+      "acceptance_criteria": [
+        "Every route and user-visible action in the rewrite scope is listed.",
+        "Data sources, API contracts, and mock or stub paths are identified.",
+        "Current build and existing checks are recorded without changing application code."
+      ]
+    },
+    {
+      "id": "owner-decisions",
+      "title": "Resolve design and release decisions",
+      "description": "Review the visual proposals at /design-preview and ask the owner to select or revise one. Obtain approval of a design brief or DESIGN.md covering visual identity, palette, typography, and theme behavior. Resolve production fallback-data policy, navigation destinations, and the trusted server-side authentication and authorization mechanism for admin. Document any backend work that requires separate approval.",
+      "status": "pending",
+      "priority": "P0",
+      "depends_on": [
+        "behavior-baseline"
+      ],
+      "acceptance_criteria": [
+        "An owner-approved design direction exists before visual implementation.",
+        "Theme behavior and any supported modes are explicitly decided.",
+        "Mock-data behavior in production is decided and cannot masquerade as real data.",
+        "Admin server-side authorization is verified or admin production release is explicitly blocked.",
+        "Placeholder or missing navigation destinations are resolved."
+      ]
+    },
+    {
+      "id": "shared-ui-foundation",
+      "title": "Build approved shared UI foundation",
+      "description": "Implement the approved design tokens, shared page structure, navigation, footer, form controls, dialogs, notifications, focus states, and responsive foundations. Preserve existing framework and deployment conventions.",
+      "status": "pending",
+      "priority": "P1",
+      "depends_on": [
+        "owner-decisions"
+      ],
+      "acceptance_criteria": [
+        "Shared components follow the approved design brief with reasons for major visual choices.",
+        "Navigation destinations exist and controls have real behavior.",
+        "Keyboard operation, visible focus, and accessible contrast are included.",
+        "Shared layout works at mobile and desktop breakpoints without horizontal overflow."
+      ]
+    },
+    {
+      "id": "public-directory-details",
+      "title": "Rewrite directory and company details",
+      "description": "Rewrite the public home and directory experience, search, industry and ownership filters, pagination, company cards, and company detail pages. Preserve routes, data shapes, and SEO behavior. Apply the approved fallback-data policy.",
+      "status": "pending",
+      "priority": "P1",
+      "depends_on": [
+        "shared-ui-foundation"
+      ],
+      "acceptance_criteria": [
+        "Search, filters, pagination, company detail links, and career links work against the existing intended contracts.",
+        "Loading, empty, and error states explain the condition and an appropriate next action.",
+        "Mock content is removed from production or visibly labeled as demo content.",
+        "Company URLs, metadata, structured data, sitemap, and robots behavior are retained or approved changes are documented."
+      ]
+    },
+    {
+      "id": "public-submission-forms",
+      "title": "Rewrite public submission forms",
+      "description": "Rewrite company submission and correction forms, preserving current fields and submission contract. Improve validation, pending, failure, success, and resubmission feedback without changing backend semantics.",
+      "status": "pending",
+      "priority": "P1",
+      "depends_on": [
+        "shared-ui-foundation",
+        "behavior-baseline"
+      ],
+      "acceptance_criteria": [
+        "Both forms submit the expected fields and preserve existing route behavior.",
+        "Validation, loading, error, and success states are visible and usable.",
+        "Forms are keyboard-operable and responsive."
+      ]
+    },
+    {
+      "id": "admin-auth-and-dashboard",
+      "title": "Rewrite admin login and dashboard",
+      "description": "Rewrite the admin login and company dashboard, including search, status filters, create, edit, delete, validation, and submission review. Use verified existing contracts. Do not treat the localStorage marker as server-side authorization; production release is gated on an approved and verified auth mechanism.",
+      "status": "pending",
+      "priority": "P2",
+      "depends_on": [
+        "shared-ui-foundation",
+        "behavior-baseline",
+        "owner-decisions"
+      ],
+      "acceptance_criteria": [
+        "All existing dashboard workflows work and report operation failures clearly.",
+        "Admin UI behavior matches the verified backend contracts.",
+        "Production release remains blocked until server-side authorization is verified.",
+        "No success-shaped UI is shown for mock or stub operations."
+      ]
+    },
+    {
+      "id": "admin-discovery",
+      "title": "Rewrite career discovery admin",
+      "description": "Rewrite domain submission, batch scan, results, history, and recheck actions for the career discovery screen. Preserve verified API contracts and show loading, error, empty, and result states.",
+      "status": "pending",
+      "priority": "P2",
+      "depends_on": [
+        "shared-ui-foundation",
+        "behavior-baseline",
+        "owner-decisions"
+      ],
+      "acceptance_criteria": [
+        "Single and batch discovery flows handle success and failure visibly.",
+        "History and result destinations are real and keyboard accessible.",
+        "The interface clearly reports limits and does not imply an operation succeeded when the API failed."
+      ]
+    },
+    {
+      "id": "release-verification",
+      "title": "Verify rewrite and staged release",
+      "description": "Run build and available checks, exercise every interactive element, validate responsive layouts, keyboard use, contrast, UI states, supported themes, SEO, and OpenNext/Cloudflare compatibility. Record per-control click-through evidence and unresolved release gates.",
+      "status": "pending",
+      "priority": "P0",
+      "depends_on": [
+        "public-directory-details",
+        "public-submission-forms",
+        "admin-auth-and-dashboard",
+        "admin-discovery"
+      ],
+      "acceptance_criteria": [
+        "Production build and available project checks pass.",
+        "Every link and interactive control has recorded evidence of its actual behavior.",
+        "Mobile, keyboard, contrast, state, and supported-theme checks pass.",
+        "SEO and OpenNext/Cloudflare behavior are verified.",
+        "Admin release gate and all remaining risks are explicitly reported."
+      ]
+    }
+  ]
+}
